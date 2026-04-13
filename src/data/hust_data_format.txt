@@ -1,0 +1,26 @@
+first cell(1-1) first cycle
+                           Status  Cycle number  Current (mA)  Voltage (V)  \
+0         Constant current charge             1       5498.13     2.795615   
+1         Constant current charge             1       5498.51     2.953584   
+2         Constant current charge             1       5498.51     3.074115   
+3         Constant current charge             1       5498.51     3.162957   
+4         Constant current charge             1       5498.13     3.225859   
+..                            ...           ...           ...          ...   
+831  Constant current discharge_3             1      -2200.14     2.525922   
+832  Constant current discharge_3             1      -2199.59     2.432507   
+833  Constant current discharge_3             1      -2199.40     2.304005   
+834  Constant current discharge_3             1      -2199.77     2.133457   
+835  Constant current discharge_3             1      -2199.77     1.913902   
+
+     Capacity (mAh)  Time (s)  Current (A)  
+0          0.000000         0      5.49813  
+1          7.636397         4      5.49851  
+2         15.273111         9      5.49851  
+3         22.909931        14      5.49851  
+4         30.546642        19      5.49813  
+..              ...       ...          ...  
+831       11.099738      4163     -2.20014  
+832        8.044227      4168     -2.19959  
+833        4.989471      4173     -2.19940  
+834        1.934093      4178     -2.19977  
+835        1.323004      4179     -2.19977  

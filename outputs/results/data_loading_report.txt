@@ -1,0 +1,126 @@
+
+====================================================================
+  MIT-Stanford Dataset - Loading Report
+====================================================================
+  Total cells loaded   : 140
+    b1: 46 cells
+    b2: 48 cells
+    b3: 46 cells
+  NOTE: 2 cell(s) have NaN cycle_life (excluded from stats): ['b3c23', 'b3c32']
+
+  Cycle life (cycles until EOL, 138 cells with valid labels)
+    min=   148  max=  1935  mean=  791.5  median=  787.0
+
+  Raw cycles stored per cell (may differ from cycle_life)
+    min=   170  max=  2237  mean=  819.6
+
+  Per-batch cycle life summary:
+    b1: n= 46  min=  534  max= 1227  mean=  844.7
+    b2: n= 48  min=  148  max= 1061  mean=  494.7
+    b3: n= 44  min=  541  max= 1935  mean= 1059.7  (2 NaN)
+
+  Unique charge policies : 72
+    1C(4%)-6C
+    2C(10%)-6C
+    2C(2%)-5C
+    2C(7%)-5.5C
+    3.6C(2%)-4.85C
+    ... and 67 more
+
+  Spot-check [b1c0] cycle '1' signal shapes:
+    I       : (1087,)
+    Qc      : (1087,)
+    Qd      : (1087,)
+    Qdlin   : (1000,)
+    T       : (1087,)
+    Tdlin   : (1000,)
+    V       : (1087,)
+    dQdV    : (1000,)
+    t       : (1087,)
+
+
+===========================================================================================
+
+====================================================================
+  HUST Dataset - Loading Report
+====================================================================
+  Total cells loaded   : 77
+    batch  1: 8 cells
+    batch  2: 7 cells
+    batch  3: 8 cells
+    batch  4: 8 cells
+    batch  5: 7 cells
+    batch  6: 7 cells
+    batch  7: 8 cells
+    batch  8: 8 cells
+    batch  9: 8 cells
+    batch 10: 8 cells
+
+  Cycle life (last cycle index)
+    min=  1142  max=  2689  mean= 1897.7  median= 1875.0
+
+  Initial discharge capacity (mAh)
+    min= 1158.9  max= 1232.2  mean= 1185.2
+  Final discharge capacity (mAh)
+    min=  880.0  max=  880.8  mean=  880.3
+
+  Spot-check [1-1] cycle 1 DataFrame:
+    columns  : ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)']
+    shape    : (836, 6)
+    Status   : ['Constant current charge', 'Constant current-constant voltage charge', 'Constant current discharge_0', 'Constant current discharge_1', 'Constant current discharge_2', 'Constant current discharge_3']
+
+  (Pdb) hust_cells["1-1"].data[1] : batch 1의 셀 1번, 1번째 사이클, 835 rows * sampling time(5s)                
+                           Status  Cycle number  Current (mA)  Voltage (V)  Capacity (mAh)  Time (s)
+0         Constant current charge             1       5498.13       2.7731        0.000000         0
+1         Constant current charge             1       5498.51       2.9811        7.636397         4
+2         Constant current charge             1       5498.51       3.0912       15.273111         9
+3         Constant current charge             1       5498.51       3.1606       22.909931        14
+4         Constant current charge             1       5498.13       3.2118       30.546642        19
+..                            ...           ...           ...          ...             ...       ...
+831  Constant current discharge_3             1      -2200.14       2.5269       11.099738      4163
+832  Constant current discharge_3             1      -2199.59       2.4581        8.044227      4168
+833  Constant current discharge_3             1      -2199.40       2.3468        4.989471      4173
+834  Constant current discharge_3             1      -2199.77       2.0470        1.934093      4178
+835  Constant current discharge_3             1      -2199.77       1.9481        1.323004      4179
+
+[836 rows x 6 columns]
+
+len(hust_cells["1-1"].data) : 1-1 총 cycle 수
+1504
+
+(Pdb) hust_cells["4-2"].data[1]                 
+*** WARNING: file 'C:\Users\ksshin\Desktop\ChanminLee\LFP_SOH_prediction\src\data\loaders.py' was edited, running stale code until the program is rerun
+                           Status  Cycle number  Current (mA)  Voltage (V)  Capacity (mAh)  Time (s)
+0         Constant current charge             1       5497.39       2.7225        0.000000         0
+1         Constant current charge             1       5497.39       3.0905        7.635264         4
+2         Constant current charge             1       5497.02       3.2015       15.271150         9
+3         Constant current charge             1       5497.39       3.2635       22.905694        14
+4         Constant current charge             1       5498.51       3.3088       30.541375        19
+..                            ...           ...           ...          ...             ...       ...
+870  Constant current discharge_3             1      -2198.84       2.1853       45.387471      4360
+871  Constant current discharge_3             1      -2199.21       2.1425       42.333027      4365
+872  Constant current discharge_3             1      -2199.59       2.0972       39.278160      4370
+873  Constant current discharge_3             1      -2199.40       2.0498       36.224204      4375
+874  Constant current discharge_3             1      -2198.84       1.9993       33.170004      4380
+
+[875 rows x 6 columns]
+(Pdb) len(hust_cells["4-2"].data) 
+1782
+
+(Pdb) hust_cells["4-1"].data[1]
+                           Status  Cycle number  Current (mA)  Voltage (V)  Capacity (mAh)  Time (s)
+0         Constant current charge             1       5496.65       2.7681        0.000000         0
+1         Constant current charge             1       5497.39       2.9721        7.635467         4
+2         Constant current charge             1       5495.16       3.0815       15.268358         9
+3         Constant current charge             1       5496.28       3.1510       22.901872        14
+4         Constant current charge             1       5496.28       3.2021       30.535697        19
+..                            ...           ...           ...          ...             ...       ...
+603  Constant current discharge_3             1      -2198.84       2.6078       14.320449      3035
+604  Constant current discharge_3             1      -2198.84       2.5554       11.266582      3040
+605  Constant current discharge_3             1      -2198.84       2.4848        8.213249      3045
+606  Constant current discharge_3             1      -2198.47       2.3657        5.158982      3050
+607  Constant current discharge_3             1      -2198.84       1.9971        2.105071      3055
+
+[608 rows x 6 columns]
+(Pdb) len(hust_cells["4-1"].data)
+2217

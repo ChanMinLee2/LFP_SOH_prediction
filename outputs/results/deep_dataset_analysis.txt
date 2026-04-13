@@ -1,0 +1,41 @@
+===============================================================================================
+              DEEP DATASET EDA & CHARACTERIZATION REPORT (ENHANCED)
+===============================================================================================
+Generated on: 2026-04-01 16:06:18.714359
+
+[1. STRUCTURAL AUDIT]
+MIT-Stanford Dataset:
+  - Total Cells: 140
+  - Avg Cycle Life: 791.5 (min=148, max=1935)
+HUST Dataset:
+  - Total Cells: 77
+  - Avg Cycle Life: 1897.7 (min=1142, max=2689)
+
+[2. AGING FEATURE EVOLUTION & PROTOCOL ANALYSIS]
+
+[MIT Protocol-Life Paradox Analysis]
+  - Observation: High C-rate policies (e.g., 4.8C-4.8C) sometimes outlive lower ones (e.g., 5.6C-3C).
+  - Metadata Evidence (batch1_meta.txt): MIT uses multi-step charging (C1 until SOC_x%, then C2).
+  - Logical Explanation:
+    1. Li-plating Risk: Plating occurs predominantly at high SOC. Policies like '5.6C(SOC_x)-3C' 
+       may apply high stress at a critical SOC window where internal resistance is higher.
+    2. Thermal Gradient: Steady high C-rate (e.g. 4.8C-4.8C) might maintain more uniform internal 
+       temperature compared to sharp current steps (e.g. 5.6C to 3C), reducing mechanical stress.
+    3. Multi-step Optimization: Some 'High C-rate' policies are actually more efficient multi-step 
+       strategies that avoid the most damaging voltage/SOC regions.
+
+[HUST C-rate vs Life Paradox Analysis]
+  - Observation: Positive correlation (Higher Discharge C-rate -> Longer Life) in Batch 3 vs others.
+  - Logical Explanation:
+    1. Batch Heterogeneity: Batch 3 cells likely had superior initial manufacturing quality (thinner, 
+       more stable SEI) compared to Batch 1 or 7, which masks the degradation effect of high C-rate.
+    2. Self-Heating Benefit: Higher discharge rates cause internal heating. In certain ambient conditions, 
+       this slight heating can reduce electrolyte viscosity and internal resistance, potentially 
+       leading to more uniform utilization of active material if the duration is short.
+    3. SEI Stabilization: Specific discharge conditions in Batch 3 might have favored a more robust 
+       re-passivation of the SEI layer compared to lower-rate cycles.
+
+[MODELING RECOMMENDATIONS]
+1. Feature Engineering: Use dV/dt or dT/dt as secondary inputs to capture thermal dynamics.
+2. Normalization: Min-Max scaling of Voltage (MIT vs HUST) to [0,1] is essential for transfer.
+3. Sequence Length: 10-cycle window is adequate, but delta-features (cyc_n - cyc_1) are key.

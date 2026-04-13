@@ -1,0 +1,126 @@
+====================================================================================================
+              HUST DATASET: REPRESENTATIVE CELL MULTISTAGE ANALYSIS (CYCLE 1)
+====================================================================================================
+Generated on: 2026-04-01 12:24:53.353713
+
+* This report analyzes the first cell of each batch to reveal its charging/discharging protocol structure.
+
+
+[BATCH 1 | CELL 1-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5498.3 |     2.773V -> 3.563V |      858.4
+Constant current-constant voltage charge |       1335.0 |        851.9 |     3.375V -> 3.600V |      317.3
+Constant current discharge_0 |        273.0 |      -5498.8 |     3.402V -> 3.112V |      418.5
+Constant current discharge_1 |        720.0 |      -1099.7 |     3.229V -> 3.216V |      220.2
+Constant current discharge_2 |        720.0 |      -1099.7 |     3.228V -> 3.175V |      220.2
+Constant current discharge_3 |        515.0 |      -2199.7 |     3.159V -> 1.948V |      315.3
+
+
+[BATCH 2 | CELL 2-2]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5496.8 |     2.810V -> 3.559V |      858.1
+Constant current-constant voltage charge |       1591.0 |        825.1 |     3.374V -> 3.598V |      365.7
+Constant current discharge_0 |        273.0 |      -5497.9 |     3.350V -> 3.108V |      418.4
+Constant current discharge_1 |        360.0 |      -2199.1 |     3.208V -> 3.170V |      220.5
+Constant current discharge_2 |        144.0 |      -5497.8 |     3.109V -> 3.008V |      221.4
+Constant current discharge_3 |        590.0 |      -2199.0 |     3.136V -> 1.990V |      361.0
+
+
+[BATCH 3 | CELL 3-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5497.1 |     2.713V -> 3.572V |      858.2
+Constant current-constant voltage charge |       1475.0 |        873.1 |     3.381V -> 3.600V |      359.1
+Constant current discharge_0 |        273.0 |      -5497.9 |     3.327V -> 3.080V |      418.5
+Constant current discharge_1 |        180.0 |      -4398.4 |     3.141V -> 3.087V |      221.1
+Constant current discharge_2 |        360.0 |      -2199.4 |     3.176V -> 3.116V |      220.6
+Constant current discharge_3 |        527.0 |      -2199.4 |     3.140V -> 1.998V |      322.6
+
+
+[BATCH 4 | CELL 4-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5496.6 |     2.768V -> 3.533V |      858.1
+Constant current-constant voltage charge |       1354.0 |        865.5 |     3.369V -> 3.598V |      326.0
+Constant current discharge_0 |        273.0 |      -5498.0 |     3.408V -> 3.132V |      418.5
+Constant current discharge_1 |        144.0 |      -5498.2 |     3.162V -> 3.104V |      221.5
+Constant current discharge_2 |        144.0 |      -5498.2 |     3.137V -> 3.056V |      221.5
+Constant current discharge_3 |        524.0 |      -2198.8 |     3.158V -> 1.997V |      320.7
+
+
+[BATCH 5 | CELL 5-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5499.2 |     2.806V -> 3.570V |      858.5
+Constant current-constant voltage charge |       1537.0 |        816.5 |     3.376V -> 3.600V |      349.5
+Constant current discharge_0 |        341.0 |      -4400.5 |     3.392V -> 3.115V |      418.0
+Constant current discharge_1 |        359.0 |      -2200.3 |     3.198V -> 3.167V |      220.0
+Constant current discharge_2 |        239.0 |      -3300.3 |     3.161V -> 3.074V |      220.0
+Constant current discharge_3 |        568.0 |      -2200.4 |     3.141V -> 1.916V |      347.8
+
+
+[BATCH 6 | CELL 6-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5499.9 |     2.769V -> 3.569V |      858.6
+Constant current-constant voltage charge |       1353.0 |        843.4 |     3.376V -> 3.599V |      317.7
+Constant current discharge_0 |        341.0 |      -4400.7 |     3.434V -> 3.140V |      418.1
+Constant current discharge_1 |        179.0 |      -4400.7 |     3.167V -> 3.110V |      220.0
+Constant current discharge_2 |        719.0 |      -1100.3 |     3.208V -> 3.178V |      220.1
+Constant current discharge_3 |        516.0 |      -2200.4 |     3.163V -> 1.960V |      316.0
+
+
+[BATCH 7 | CELL 7-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5498.5 |     2.758V -> 3.523V |      858.4
+Constant current-constant voltage charge |       1344.0 |        872.5 |     3.368V -> 3.598V |      326.2
+Constant current discharge_0 |        342.0 |      -4399.1 |     3.436V -> 3.153V |      419.1
+Constant current discharge_1 |        144.0 |      -5499.0 |     3.158V -> 3.097V |      221.5
+Constant current discharge_2 |        180.0 |      -4399.1 |     3.151V -> 3.084V |      221.2
+Constant current discharge_3 |        524.0 |      -2199.6 |     3.161V -> 1.980V |      320.8
+
+
+[BATCH 8 | CELL 8-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5499.7 |     2.758V -> 3.538V |      858.6
+Constant current-constant voltage charge |       1360.0 |        840.5 |     3.370V -> 3.600V |      318.9
+Constant current discharge_0 |        455.0 |      -3300.4 |     3.476V -> 3.176V |      418.0
+Constant current discharge_1 |        359.0 |      -2200.2 |     3.220V -> 3.179V |      220.0
+Constant current discharge_2 |        359.0 |      -2200.2 |     3.197V -> 3.134V |      220.0
+Constant current discharge_3 |        519.0 |      -2200.2 |     3.157V -> 1.989V |      317.8
+
+
+[BATCH 9 | CELL 9-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5498.5 |     2.720V -> 3.557V |      858.4
+Constant current-constant voltage charge |       1515.0 |        868.3 |     3.377V -> 3.599V |      366.8
+Constant current discharge_0 |        456.0 |      -3299.9 |     3.417V -> 3.139V |      418.9
+Constant current discharge_1 |        240.0 |      -3299.8 |     3.165V -> 3.114V |      220.9
+Constant current discharge_2 |        144.0 |      -5499.9 |     3.079V -> 3.002V |      221.5
+Constant current discharge_3 |        552.0 |      -2199.7 |     3.136V -> 1.989V |      337.9
+
+
+[BATCH 10 | CELL 10-1]
+--------------------------------------------------
+Status          |  Duration(s) |    Avg_I(mA) |        Voltage Range |   Cap(mAh)
+---------------------------------------------------------------------------------
+Constant current charge |        561.0 |       5498.7 |     2.761V -> 3.536V |      858.4
+Constant current-constant voltage charge |       1315.0 |        868.1 |     3.369V -> 3.600V |      318.5
+Constant current discharge_0 |        456.0 |      -3299.6 |     3.479V -> 3.177V |      418.9
+Constant current discharge_1 |        144.0 |      -5499.6 |     3.156V -> 3.083V |      221.5
+Constant current discharge_2 |        240.0 |      -3299.6 |     3.161V -> 3.104V |      220.9
+Constant current discharge_3 |        512.0 |      -2199.9 |     3.157V -> 1.986V |      313.5

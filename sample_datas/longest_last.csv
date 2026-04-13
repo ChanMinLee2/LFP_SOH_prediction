@@ -1,0 +1,455 @@
+Status,Cycle number,Current (mA),Voltage (V),Capacity (mAh),Time (s)
+Constant current charge,2689,5499.25,2.7808,0.0,0
+Constant current charge,2689,5499.25,2.9789,7.638261111111111,4
+Constant current charge,2689,5498.88,3.0967,15.276525,9
+Constant current charge,2689,5500.74,3.173,22.91488888888889,14
+Constant current charge,2689,5499.25,3.2291,30.552530555555556,19
+Constant current charge,2689,5499.25,3.2728,38.190580555555556,24
+Constant current charge,2689,5498.51,3.3079,45.828741666666666,29
+Constant current charge,2689,5500.37,3.3358,53.46731111111111,34
+Constant current charge,2689,5499.62,3.3562,61.104955555555556,39
+Constant current charge,2689,5498.88,3.3705,68.74352777777777,44
+Constant current charge,2689,5499.62,3.3807,76.38127777777778,49
+Constant current charge,2689,5499.25,3.3891,84.01923333333333,54
+Constant current charge,2689,5499.25,3.3965,91.65708333333333,59
+Constant current charge,2689,5498.88,3.4033,99.29492222222223,64
+Constant current charge,2689,5498.88,3.4102,106.93298888888889,69
+Constant current charge,2689,5499.62,3.4161,114.57072222222222,74
+Constant current charge,2689,5499.25,3.4223,122.20846666666667,79
+Constant current charge,2689,5499.25,3.4278,129.84673333333333,84
+Constant current charge,2689,5500.74,3.4331,137.4853,89
+Constant current charge,2689,5499.62,3.4378,145.12335555555555,94
+Constant current charge,2689,5499.62,3.4427,152.76132222222222,99
+Constant current charge,2689,5500.74,3.4468,160.40102222222222,104
+Constant current charge,2689,5498.88,3.4508,168.03866666666667,109
+Constant current charge,2689,5499.25,3.4545,175.6766111111111,114
+Constant current charge,2689,5500.74,3.4582,183.3154888888889,119
+Constant current charge,2689,5499.25,3.4613,190.95344444444444,124
+Constant current charge,2689,5500.74,3.4647,198.5921111111111,129
+Constant current charge,2689,5499.25,3.4678,206.22997777777778,134
+Constant current charge,2689,5499.25,3.4706,213.86824444444446,139
+Constant current charge,2689,5498.51,3.4734,221.5064,144
+Constant current charge,2689,5499.62,3.4759,229.14464444444445,149
+Constant current charge,2689,5499.62,3.4784,236.7831111111111,154
+Constant current charge,2689,5499.25,3.4809,244.42126666666667,159
+Constant current charge,2689,5500.37,3.483,252.0595111111111,164
+Constant current charge,2689,5499.25,3.4852,259.6970888888889,169
+Constant current charge,2689,5499.62,3.4877,267.3353333333333,174
+Constant current charge,2689,5499.25,3.4895,274.9734,179
+Constant current charge,2689,5500.37,3.4914,282.6117777777778,184
+Constant current charge,2689,5499.62,3.4933,290.2505111111111,189
+Constant current charge,2689,5500.37,3.4954,297.88908888888886,194
+Constant current charge,2689,5500.74,3.497,305.529,199
+Constant current charge,2689,5498.88,3.4988,313.1664222222222,204
+Constant current charge,2689,5500.74,3.5004,320.8055111111111,209
+Constant current charge,2689,5500.74,3.5026,328.4449333333333,214
+Constant current charge,2689,5500.74,3.5041,336.0844,219
+Constant current charge,2689,5498.88,3.5057,343.7227111111111,224
+Constant current charge,2689,5498.88,3.5075,351.35982222222225,229
+Constant current charge,2689,5499.25,3.5091,358.9977777777778,234
+Constant current charge,2689,5499.25,3.5109,366.6356,239
+Constant current charge,2689,5500.37,3.5128,374.2745777777778,244
+Constant current charge,2689,5498.88,3.5143,381.9128,249
+Constant current charge,2689,5499.25,3.5159,389.5502222222222,254
+Constant current charge,2689,5499.62,3.5174,397.18822222222224,259
+Constant current charge,2689,5499.25,3.5193,404.8264,264
+Constant current charge,2689,5500.37,3.5208,412.4646666666667,269
+Constant current charge,2689,5499.25,3.5224,420.1024,274
+Constant current charge,2689,5499.25,3.5239,427.7404,279
+Constant current charge,2689,5498.88,3.5261,435.3792888888889,284
+Constant current charge,2689,5498.51,3.5277,443.0164888888889,289
+Constant current charge,2689,5499.62,3.5292,450.65444444444444,294
+Constant current charge,2689,5499.25,3.5308,458.29226666666665,299
+Constant current charge,2689,5499.25,3.5326,465.93035555555554,304
+Constant current charge,2689,5498.51,3.5345,473.5672,309
+Constant current charge,2689,5500.37,3.536,481.20533333333333,314
+Constant current charge,2689,5500.74,3.5379,488.84453333333335,319
+Constant current charge,2689,5499.62,3.5394,496.4836888888889,324
+Constant current charge,2689,5499.62,3.5416,504.1231111111111,329
+Constant current charge,2689,5499.25,3.5435,511.76124444444446,334
+Constant current charge,2689,5499.25,3.5453,519.3994222222223,339
+Constant current charge,2689,5499.25,3.5469,527.0366666666666,344
+Constant current charge,2689,5500.37,3.5491,534.6759555555556,349
+Constant current charge,2689,5499.62,3.5509,542.3155555555555,354
+Constant current charge,2689,5499.62,3.5531,549.9537333333334,359
+Constant current charge,2689,5499.25,3.5549,557.5921333333333,364
+Constant current charge,2689,5499.25,3.5571,565.2294666666667,369
+Constant current charge,2689,5498.88,3.5593,572.8680444444444,374
+Constant current charge,2689,5499.62,3.5615,580.5057777777778,379
+Constant current charge,2689,5500.37,3.5636,588.1441777777778,384
+Constant current charge,2689,5498.88,3.5661,595.7832444444444,389
+Constant current charge,2689,5499.25,3.5683,603.4208444444445,394
+Constant current charge,2689,5499.25,3.5708,611.0588,399
+Constant current charge,2689,5500.74,3.5735,618.6973777777778,404
+Constant current charge,2689,5500.74,3.576,626.3373777777778,409
+Constant current charge,2689,5499.25,3.5788,633.9764444444445,414
+Constant current charge,2689,5499.25,3.5819,641.6145333333334,419
+Constant current charge,2689,5498.51,3.585,649.2522222222223,424
+Constant current charge,2689,5500.74,3.5884,656.8902666666667,429
+Constant current charge,2689,5500.37,3.5918,664.5298666666666,434
+Constant current charge,2689,5499.62,3.5959,672.1681333333333,439
+Constant current charge,2689,5498.51,3.5996,679.8058222222222,444
+Constant current charge,2689,5498.88,3.6005,681.3332,445
+Constant current-constant voltage charge,2689,1099.51,3.377,681.3332,476
+Constant current-constant voltage charge,2689,1099.7,3.3869,682.8606611111112,480
+Constant current-constant voltage charge,2689,1099.51,3.3916,684.3875055555555,485
+Constant current-constant voltage charge,2689,1099.88,3.3937,685.9148083333333,490
+Constant current-constant voltage charge,2689,1099.51,3.3959,687.4421166666667,495
+Constant current-constant voltage charge,2689,1099.51,3.3968,688.9692138888889,500
+Constant current-constant voltage charge,2689,1100.07,3.3981,690.4968277777779,505
+Constant current-constant voltage charge,2689,1099.88,3.3987,692.0246000000001,510
+Constant current-constant voltage charge,2689,1099.14,3.3996,693.5517,515
+Constant current-constant voltage charge,2689,1099.14,3.4006,695.0782305555556,520
+Constant current-constant voltage charge,2689,1099.51,3.4012,696.6053277777778,525
+Constant current-constant voltage charge,2689,1099.51,3.4024,698.1324222222222,530
+Constant current-constant voltage charge,2689,1099.51,3.4033,699.6599361111112,535
+Constant current-constant voltage charge,2689,1099.51,3.404,701.1872916666667,540
+Constant current-constant voltage charge,2689,1099.51,3.4046,702.7143861111111,545
+Constant current-constant voltage charge,2689,1099.51,3.4055,704.2414861111112,550
+Constant current-constant voltage charge,2689,1099.51,3.4064,705.7686361111112,555
+Constant current-constant voltage charge,2689,1099.51,3.4071,707.2957333333334,560
+Constant current-constant voltage charge,2689,1099.88,3.408,708.8232444444445,565
+Constant current-constant voltage charge,2689,1099.51,3.4089,710.3500861111112,570
+Constant current-constant voltage charge,2689,1100.07,3.4102,711.8773916666667,575
+Constant current-constant voltage charge,2689,1099.51,3.4108,713.4045444444445,580
+Constant current-constant voltage charge,2689,1099.51,3.4117,714.9316416666667,585
+Constant current-constant voltage charge,2689,1099.88,3.4126,716.4589472222223,590
+Constant current-constant voltage charge,2689,1099.7,3.4136,717.9866666666667,595
+Constant current-constant voltage charge,2689,1099.14,3.4142,719.5136111111111,600
+Constant current-constant voltage charge,2689,1099.14,3.4151,721.0401916666667,605
+Constant current-constant voltage charge,2689,1099.33,3.4161,722.5670416666667,610
+Constant current-constant voltage charge,2689,1099.14,3.417,724.0937805555556,615
+Constant current-constant voltage charge,2689,1099.51,3.4182,725.6206222222222,620
+Constant current-constant voltage charge,2689,1099.14,3.4188,727.1473111111111,625
+Constant current-constant voltage charge,2689,1099.14,3.4201,728.674,630
+Constant current-constant voltage charge,2689,1099.33,3.4207,730.2008444444444,635
+Constant current-constant voltage charge,2689,1099.33,3.4216,731.7277388888889,640
+Constant current-constant voltage charge,2689,1099.14,3.4226,733.2543222222223,645
+Constant current-constant voltage charge,2689,1099.51,3.4235,734.7813722222222,650
+Constant current-constant voltage charge,2689,1099.88,3.4244,736.3088388888889,655
+Constant current-constant voltage charge,2689,1099.51,3.4257,737.8357777777778,660
+Constant current-constant voltage charge,2689,1099.88,3.4266,739.363288888889,665
+Constant current-constant voltage charge,2689,1099.51,3.4275,740.8902944444445,670
+Constant current-constant voltage charge,2689,1099.88,3.4288,742.4175444444445,675
+Constant current-constant voltage charge,2689,1099.14,3.4297,743.9445944444444,680
+Constant current-constant voltage charge,2689,1099.51,3.4306,745.4716888888889,685
+Constant current-constant voltage charge,2689,1099.88,3.4316,746.9991,690
+Constant current-constant voltage charge,2689,1099.14,3.4325,748.5259944444444,695
+Constant current-constant voltage charge,2689,1099.51,3.4337,750.0530444444445,700
+Constant current-constant voltage charge,2689,1099.51,3.435,751.5801944444445,705
+Constant current-constant voltage charge,2689,1099.51,3.4359,753.10745,710
+Constant current-constant voltage charge,2689,1099.51,3.4368,754.6348055555555,715
+Constant current-constant voltage charge,2689,1099.51,3.4381,756.1620611111111,720
+Constant current-constant voltage charge,2689,1099.51,3.439,757.6892055555556,725
+Constant current-constant voltage charge,2689,1099.51,3.4399,759.2164111111111,730
+Constant current-constant voltage charge,2689,1099.51,3.4415,760.7435666666667,735
+Constant current-constant voltage charge,2689,1099.51,3.4424,762.2706555555555,740
+Constant current-constant voltage charge,2689,1099.51,3.4437,763.7977055555556,745
+Constant current-constant voltage charge,2689,1099.51,3.4446,765.3248055555556,750
+Constant current-constant voltage charge,2689,1099.51,3.4458,766.8517,755
+Constant current-constant voltage charge,2689,1099.51,3.4468,768.378788888889,760
+Constant current-constant voltage charge,2689,1099.7,3.448,769.9060055555556,765
+Constant current-constant voltage charge,2689,1099.51,3.4495,771.4333555555556,770
+Constant current-constant voltage charge,2689,1099.51,3.4508,772.9604055555556,775
+Constant current-constant voltage charge,2689,1099.33,3.452,774.4876611111112,780
+Constant current-constant voltage charge,2689,1099.7,3.4533,776.0146555555556,785
+Constant current-constant voltage charge,2689,1100.07,3.4542,777.5419555555555,790
+Constant current-constant voltage charge,2689,1099.14,3.4557,779.0691666666667,795
+Constant current-constant voltage charge,2689,1099.51,3.4573,780.5962666666667,800
+Constant current-constant voltage charge,2689,1099.88,3.4585,782.1236666666667,805
+Constant current-constant voltage charge,2689,1099.14,3.4598,783.6508111111111,810
+Constant current-constant voltage charge,2689,1099.14,3.4613,785.1775111111111,815
+Constant current-constant voltage charge,2689,1099.14,3.4626,786.7041444444445,820
+Constant current-constant voltage charge,2689,1099.33,3.4641,788.2311444444445,825
+Constant current-constant voltage charge,2689,1099.7,3.4657,789.7586555555556,830
+Constant current-constant voltage charge,2689,1099.51,3.4669,791.2857555555556,835
+Constant current-constant voltage charge,2689,1099.51,3.4685,792.8128444444445,840
+Constant current-constant voltage charge,2689,1099.33,3.47,794.3398888888889,845
+Constant current-constant voltage charge,2689,1099.14,3.4722,795.8664777777778,850
+Constant current-constant voltage charge,2689,1099.33,3.4737,797.3932777777778,855
+Constant current-constant voltage charge,2689,1099.33,3.4753,798.9204777777778,860
+Constant current-constant voltage charge,2689,1099.33,3.4768,800.4473222222223,865
+Constant current-constant voltage charge,2689,1099.33,3.4787,801.9741222222223,870
+Constant current-constant voltage charge,2689,1099.88,3.4809,803.5014777777778,875
+Constant current-constant voltage charge,2689,1099.51,3.4824,805.0290333333334,880
+Constant current-constant voltage charge,2689,1099.33,3.4846,806.5560333333334,885
+Constant current-constant voltage charge,2689,1099.51,3.4864,808.0828777777779,890
+Constant current-constant voltage charge,2689,1099.51,3.4886,809.6099777777778,895
+Constant current-constant voltage charge,2689,1100.07,3.4908,811.1372777777779,900
+Constant current-constant voltage charge,2689,1099.51,3.4929,812.6644777777778,905
+Constant current-constant voltage charge,2689,1099.14,3.4954,814.1915333333334,910
+Constant current-constant voltage charge,2689,1099.51,3.4979,815.7185111111112,915
+Constant current-constant voltage charge,2689,1099.33,3.5004,817.2457222222223,920
+Constant current-constant voltage charge,2689,1099.51,3.5032,818.7727111111111,925
+Constant current-constant voltage charge,2689,1099.51,3.5057,820.3000666666667,930
+Constant current-constant voltage charge,2689,1099.14,3.5084,821.8267111111111,935
+Constant current-constant voltage charge,2689,1099.51,3.5115,823.3537777777779,940
+Constant current-constant voltage charge,2689,1099.51,3.5143,824.8808444444445,945
+Constant current-constant voltage charge,2689,1099.51,3.5174,826.4079444444444,950
+Constant current-constant voltage charge,2689,1099.51,3.5208,827.9350555555556,955
+Constant current-constant voltage charge,2689,1099.51,3.5243,829.4621555555556,960
+Constant current-constant voltage charge,2689,1100.07,3.528,830.9896222222222,965
+Constant current-constant voltage charge,2689,1099.88,3.5317,832.5174333333334,970
+Constant current-constant voltage charge,2689,1099.7,3.5357,834.0450888888889,975
+Constant current-constant voltage charge,2689,1099.33,3.5398,835.5723444444445,980
+Constant current-constant voltage charge,2689,1099.51,3.5444,837.0992555555556,985
+Constant current-constant voltage charge,2689,1099.51,3.5491,838.6263444444445,990
+Constant current-constant voltage charge,2689,1099.33,3.5537,840.1537222222223,995
+Constant current-constant voltage charge,2689,1099.51,3.559,841.6806444444445,1000
+Constant current-constant voltage charge,2689,1099.51,3.5646,843.2078888888889,1005
+Constant current-constant voltage charge,2689,1099.51,3.5701,844.7348000000001,1010
+Constant current-constant voltage charge,2689,1099.33,3.5766,846.2619888888889,1015
+Constant current-constant voltage charge,2689,1099.51,3.5832,847.7890555555556,1020
+Constant current-constant voltage charge,2689,1099.51,3.5906,849.3161555555556,1025
+Constant current-constant voltage charge,2689,1099.7,3.5984,850.8435111111112,1030
+Constant current-constant voltage charge,2689,1021.2000000000002,3.6005,852.3088444444445,1035
+Constant current-constant voltage charge,2689,968.0,3.6005,853.6815666666666,1040
+Constant current-constant voltage charge,2689,921.5,3.6005,854.9871555555555,1045
+Constant current-constant voltage charge,2689,877.79,3.6005,856.2302333333333,1050
+Constant current-constant voltage charge,2689,836.68,3.6002,857.4146111111112,1055
+Constant current-constant voltage charge,2689,796.87,3.6005,858.5431111111111,1060
+Constant current-constant voltage charge,2689,758.18,3.6005,859.6171111111112,1065
+Constant current-constant voltage charge,2689,722.09,3.6005,860.6397111111112,1070
+Constant current-constant voltage charge,2689,687.31,3.6005,861.6135111111112,1075
+Constant current-constant voltage charge,2689,654.38,3.6005,862.5397444444445,1080
+Constant current-constant voltage charge,2689,621.27,3.6005,863.4212333333334,1085
+Constant current-constant voltage charge,2689,590.77,3.6005,864.2592777777778,1090
+Constant current-constant voltage charge,2689,561.94,3.6002,865.0560111111112,1095
+Constant current-constant voltage charge,2689,533.11,3.6005,865.8132333333333,1100
+Constant current-constant voltage charge,2689,507.05999999999995,3.6005,866.5330444444445,1105
+Constant current-constant voltage charge,2689,482.51,3.6002,867.2168111111112,1110
+Constant current-constant voltage charge,2689,457.96,3.6005,867.8663777777779,1115
+Constant current-constant voltage charge,2689,435.82,3.6005,868.4834222222223,1120
+Constant current-constant voltage charge,2689,412.94,3.6002,869.0694888888889,1125
+Constant current-constant voltage charge,2689,392.67,3.6005,869.6257555555555,1130
+Constant current-constant voltage charge,2689,373.13,3.6005,870.1544888888889,1135
+Constant current-constant voltage charge,2689,353.6,3.6005,870.6564888888889,1140
+Constant current-constant voltage charge,2689,336.12,3.6005,871.1336444444445,1145
+Constant current-constant voltage charge,2689,319.19,3.6002,871.5865555555556,1150
+Constant current-constant voltage charge,2689,303.57,3.6002,872.0169555555556,1155
+Constant current-constant voltage charge,2689,288.5,3.6002,872.4258666666667,1160
+Constant current-constant voltage charge,2689,274.55,3.6005,872.8146222222223,1165
+Constant current-constant voltage charge,2689,260.6,3.6005,873.1847777777778,1170
+Constant current-constant voltage charge,2689,248.51,3.6005,873.5371333333334,1175
+Constant current-constant voltage charge,2689,236.23,3.6002,873.8722,1180
+Constant current-constant voltage charge,2689,225.26,3.6002,874.1905333333334,1185
+Constant current-constant voltage charge,2689,214.84,3.6005,874.4947111111112,1190
+Constant current-constant voltage charge,2689,203.68,3.6005,874.7838,1195
+Constant current-constant voltage charge,2689,194.38,3.6005,875.0593555555556,1200
+Constant current-constant voltage charge,2689,186.38,3.6005,875.3220222222222,1205
+Constant current-constant voltage charge,2689,176.71,3.6005,875.5722888888889,1210
+Constant current-constant voltage charge,2689,169.08,3.6005,875.8108,1215
+Constant current-constant voltage charge,2689,161.83,3.6002,876.0391333333333,1220
+Constant current-constant voltage charge,2689,154.57,3.6005,876.2570444444445,1225
+Constant current-constant voltage charge,2689,146.94,3.6002,876.4654444444445,1230
+Constant current-constant voltage charge,2689,140.43,3.6005,876.6638666666668,1235
+Constant current-constant voltage charge,2689,134.3,3.6005,876.854288888889,1240
+Constant current-constant voltage charge,2689,128.34,3.6005,877.0369777777778,1245
+Constant current-constant voltage charge,2689,122.95,3.6005,877.2110222222223,1250
+Constant current-constant voltage charge,2689,117.55,3.6005,877.3769555555556,1255
+Constant current-constant voltage charge,2689,113.46,3.6002,877.5368000000001,1260
+Constant current-constant voltage charge,2689,108.81,3.6005,877.6906222222223,1265
+Constant current-constant voltage charge,2689,104.91,3.6005,877.8385111111111,1270
+Constant current-constant voltage charge,2689,100.44,3.6005,877.9808666666668,1275
+Constant current-constant voltage charge,2689,97.842,3.6005,878.1184977777777,1280
+Constant current-constant voltage charge,2689,94.252,3.6005,878.2513866666667,1285
+Constant current-constant voltage charge,2689,90.848,3.6005,878.37944,1290
+Constant current-constant voltage charge,2689,87.425,3.6005,878.5027644444444,1295
+Constant current-constant voltage charge,2689,84.443,3.6005,878.6216088888889,1300
+Constant current-constant voltage charge,2689,81.336,3.6002,878.7363111111111,1305
+Constant current-constant voltage charge,2689,78.658,3.6005,878.8469600000001,1310
+Constant current-constant voltage charge,2689,75.954,3.6005,878.9539822222223,1315
+Constant current-constant voltage charge,2689,73.462,3.6002,879.0574844444445,1320
+Constant current-constant voltage charge,2689,71.174,3.6005,879.157608888889,1325
+Constant current-constant voltage charge,2689,69.14,3.6005,879.2545866666667,1330
+Constant current-constant voltage charge,2689,67.007,3.6005,879.3487911111112,1335
+Constant current-constant voltage charge,2689,64.936,3.6005,879.4401333333334,1340
+Constant current-constant voltage charge,2689,63.182,3.6005,879.5288977777778,1345
+Constant current-constant voltage charge,2689,61.489,3.6005,879.6151555555556,1350
+Constant current-constant voltage charge,2689,59.852,3.6005,879.6991022222222,1355
+Constant current-constant voltage charge,2689,58.37,3.6005,879.7809866666666,1360
+Constant current-constant voltage charge,2689,56.913,3.6005,879.8607733333333,1365
+Constant current-constant voltage charge,2689,55.574,3.6005,879.9385511111111,1370
+Constant current-constant voltage charge,2689,54.774,3.6005,879.9844355555556,1373
+Constant current discharge_0,2689,-4400.29,3.3903,879.9844355555556,1379
+Constant current discharge_0,2689,-4400.29,3.2344,873.8729216666667,1383
+Constant current discharge_0,2689,-4400.29,3.1938,867.7614077777778,1388
+Constant current discharge_0,2689,-4400.29,3.1777,861.649893888889,1393
+Constant current discharge_0,2689,-4400.29,3.169,855.5383800000001,1398
+Constant current discharge_0,2689,-4400.29,3.1628,849.4268661111112,1403
+Constant current discharge_0,2689,-4400.29,3.1581,843.3153522222223,1408
+Constant current discharge_0,2689,-4400.29,3.1547,837.2038411111112,1413
+Constant current discharge_0,2689,-4400.29,3.1522,831.0923244444444,1418
+Constant current discharge_0,2689,-4400.29,3.1498,824.9808133333333,1423
+Constant current discharge_0,2689,-4400.29,3.1476,818.8692966666667,1428
+Constant current discharge_0,2689,-4400.29,3.146,812.75778,1433
+Constant current discharge_0,2689,-4400.29,3.1445,806.6458577777778,1438
+Constant current discharge_0,2689,-4399.92,3.1429,800.5342355555556,1443
+Constant current discharge_0,2689,-4400.29,3.1417,794.4237522222222,1448
+Constant current discharge_0,2689,-4399.92,3.1405,788.31203,1453
+Constant current discharge_0,2689,-4400.29,3.1392,782.2008244444445,1458
+Constant current discharge_0,2689,-4399.18,3.1383,776.0892133333334,1463
+Constant current discharge_0,2689,-4401.41,3.1374,769.97738,1468
+Constant current discharge_0,2689,-4400.29,3.1358,763.8660688888889,1473
+Constant current discharge_0,2689,-4400.29,3.1349,757.7541355555556,1478
+Constant current discharge_0,2689,-4400.66,3.1339,751.6428355555556,1483
+Constant current discharge_0,2689,-4400.29,3.133,745.5315133333334,1488
+Constant current discharge_0,2689,-4400.29,3.1318,739.4200911111111,1493
+Constant current discharge_0,2689,-4401.04,3.1308,733.308168888889,1498
+Constant current discharge_0,2689,-4400.29,3.1299,727.1970577777778,1503
+Constant current discharge_0,2689,-4399.92,3.129,721.0856466666667,1508
+Constant current discharge_0,2689,-4399.92,3.1277,714.9738466666668,1513
+Constant current discharge_0,2689,-4400.29,3.1268,708.8626355555556,1518
+Constant current discharge_0,2689,-4399.18,3.1259,702.7512022222222,1523
+Constant current discharge_0,2689,-4401.04,3.125,696.6393800000001,1528
+Constant current discharge_0,2689,-4400.29,3.1237,690.52828,1533
+Constant current discharge_0,2689,-4399.92,3.1228,684.4164577777779,1538
+Constant current discharge_0,2689,-4400.29,3.1218,678.3052577777778,1543
+Constant current discharge_0,2689,-4400.29,3.1209,672.1935244444445,1548
+Constant current discharge_0,2689,-4399.92,3.1194,666.0822133333334,1553
+Constant current discharge_0,2689,-4400.66,3.1184,659.9705911111112,1558
+Constant current discharge_0,2689,-4399.92,3.1172,653.8583688888889,1563
+Constant current discharge_0,2689,-4400.66,3.1163,647.7467244444445,1568
+Constant current discharge_0,2689,-4400.29,3.115,641.6343911111112,1573
+Constant current discharge_0,2689,-4400.29,3.1141,635.5235911111112,1578
+Constant current discharge_0,2689,-4401.41,3.1132,629.411568888889,1583
+Constant current discharge_0,2689,-4400.29,3.1116,623.3003688888889,1588
+Constant current discharge_0,2689,-4400.29,3.1104,617.1889466666667,1593
+Constant current discharge_0,2689,-4400.29,3.1094,611.0774133333334,1598
+Constant current discharge_0,2689,-4399.92,3.1082,604.9654133333333,1603
+Constant current discharge_0,2689,-4400.29,3.107,598.8546133333334,1608
+Constant current discharge_0,2689,-4400.29,3.1057,592.74308,1613
+Constant current discharge_0,2689,-4401.41,3.1042,586.6311688888889,1618
+Constant current discharge_0,2689,-4399.18,3.1029,580.5201911111112,1623
+Constant current discharge_0,2689,-4400.29,3.1017,574.408768888889,1628
+Constant current discharge_0,2689,-4401.04,3.1005,568.2966133333334,1633
+Constant current discharge_0,2689,-4399.92,3.0992,562.1859022222222,1638
+Constant current discharge_0,2689,-4400.29,3.098,556.0744355555555,1643
+Constant current discharge_0,2689,-4401.04,3.0964,549.96228,1648
+Constant current discharge_0,2689,-4399.92,3.0952,543.8515911111111,1653
+Constant current discharge_0,2689,-4400.29,3.0939,537.7400577777778,1658
+Constant current discharge_0,2689,-4399.92,3.0924,531.6283688888889,1663
+Constant current discharge_0,2689,-4400.29,3.0912,525.5172577777778,1668
+Constant current discharge_0,2689,-4399.18,3.0899,519.4058133333333,1673
+Constant current discharge_0,2689,-4400.29,3.0881,513.2943022222223,1678
+Constant current discharge_0,2689,-4399.92,3.0868,507.18248000000006,1683
+Constant current discharge_0,2689,-4400.29,3.0853,501.0716355555556,1688
+Constant current discharge_0,2689,-4400.29,3.0837,494.96021333333334,1693
+Constant current discharge_0,2689,-4400.66,3.0825,488.84843555555557,1698
+Constant current discharge_0,2689,-4400.66,3.0806,482.7364355555556,1703
+Constant current discharge_0,2689,-4401.04,3.0791,476.62399111111114,1708
+Constant current discharge_0,2689,-4399.92,3.0775,470.5130133333334,1713
+Constant current discharge_0,2689,-4399.92,3.076,464.40199111111116,1718
+Constant current discharge_0,2689,-4399.92,3.0753,461.9575466666667,1720
+Constant current discharge_1,2689,-2199.77,3.1653,461.9575466666667,1726
+Constant current discharge_1,2689,-2199.96,3.1615,458.90210222222225,1730
+Constant current discharge_1,2689,-2200.33,3.1622,455.84619388888893,1735
+Constant current discharge_1,2689,-2199.59,3.1631,452.7911577777778,1740
+Constant current discharge_1,2689,-2200.33,3.1634,449.7353522222223,1745
+Constant current discharge_1,2689,-2199.59,3.1634,446.67995500000006,1750
+Constant current discharge_1,2689,-2199.77,3.1631,443.62507444444446,1755
+Constant current discharge_1,2689,-2199.77,3.1628,440.56984111111115,1760
+Constant current discharge_1,2689,-2199.59,3.1625,437.5143438888889,1765
+Constant current discharge_1,2689,-2199.77,3.1618,434.4593105555556,1770
+Constant current discharge_1,2689,-2199.77,3.1609,431.40407722222227,1775
+Constant current discharge_1,2689,-2199.4,3.1603,428.3488883333334,1780
+Constant current discharge_1,2689,-2199.77,3.1591,425.2937522222223,1785
+Constant current discharge_1,2689,-2199.77,3.1581,422.2385188888889,1790
+Constant current discharge_1,2689,-2199.77,3.1572,419.1832855555556,1795
+Constant current discharge_1,2689,-2199.77,3.1566,416.1280466666667,1800
+Constant current discharge_1,2689,-2199.77,3.1556,413.0728133333334,1805
+Constant current discharge_1,2689,-2199.77,3.1544,410.01757444444445,1810
+Constant current discharge_1,2689,-2199.77,3.1535,406.96233555555557,1815
+Constant current discharge_1,2689,-2199.4,3.1525,403.90746333333334,1820
+Constant current discharge_1,2689,-2199.59,3.1513,400.8525244444445,1825
+Constant current discharge_1,2689,-2199.59,3.1504,397.7975411111112,1830
+Constant current discharge_1,2689,-2200.33,3.1494,394.74194111111115,1835
+Constant current discharge_1,2689,-2199.77,3.1485,391.6863966666667,1840
+Constant current discharge_1,2689,-2199.77,3.1473,388.63115777777784,1845
+Constant current discharge_1,2689,-2199.77,3.1463,385.57592444444447,1850
+Constant current discharge_1,2689,-2199.59,3.1454,382.52074111111114,1855
+Constant current discharge_1,2689,-2199.59,3.1445,379.4658522222222,1860
+Constant current discharge_1,2689,-2199.96,3.1432,376.4107133333334,1865
+Constant current discharge_1,2689,-2199.96,3.142,373.3549188888889,1870
+Constant current discharge_1,2689,-2199.77,3.1411,370.29968,1875
+Constant current discharge_1,2689,-2199.77,3.1401,367.2444355555556,1880
+Constant current discharge_1,2689,-2199.4,3.1392,364.18962444444446,1885
+Constant current discharge_1,2689,-2199.4,3.1383,361.13489111111113,1890
+Constant current discharge_1,2689,-2199.77,3.137,358.0798133333334,1895
+Constant current discharge_1,2689,-2199.77,3.1358,355.02431333333334,1900
+Constant current discharge_1,2689,-2199.77,3.1349,351.9693244444445,1905
+Constant current discharge_1,2689,-2200.14,3.1336,348.9139466666667,1910
+Constant current discharge_1,2689,-2199.59,3.1327,345.85891333333336,1915
+Constant current discharge_1,2689,-2199.77,3.1318,342.80368000000004,1920
+Constant current discharge_1,2689,-2199.77,3.1308,339.74808,1925
+Constant current discharge_1,2689,-2199.77,3.1296,336.69299111111116,1930
+Constant current discharge_1,2689,-2199.77,3.1287,333.6377688888889,1935
+Constant current discharge_1,2689,-2199.77,3.1274,330.5825244444445,1940
+Constant current discharge_1,2689,-2199.96,3.1265,327.52722444444447,1945
+Constant current discharge_1,2689,-2199.77,3.1253,324.4720022222223,1950
+Constant current discharge_1,2689,-2199.77,3.1243,321.4167466666667,1955
+Constant current discharge_1,2689,-2199.59,3.1234,318.36198,1960
+Constant current discharge_1,2689,-2200.14,3.1222,315.3064355555556,1965
+Constant current discharge_1,2689,-2199.77,3.1212,312.25115777777785,1970
+Constant current discharge_1,2689,-2199.77,3.12,309.19591333333335,1975
+Constant current discharge_1,2689,-2199.4,3.1187,306.1409355555556,1980
+Constant current discharge_1,2689,-2199.4,3.1178,303.0862577777778,1985
+Constant current discharge_1,2689,-2199.77,3.1169,300.03128000000004,1990
+Constant current discharge_1,2689,-2199.77,3.1156,296.9760355555556,1995
+Constant current discharge_1,2689,-2200.14,3.1147,293.92048,2000
+Constant current discharge_1,2689,-2199.77,3.1135,290.8653022222222,2005
+Constant current discharge_1,2689,-2199.77,3.1122,287.81006888888896,2010
+Constant current discharge_1,2689,-2200.33,3.1113,284.7545244444445,2015
+Constant current discharge_1,2689,-2199.59,3.1101,281.69923555555556,2020
+Constant current discharge_1,2689,-2199.77,3.1091,278.6440577777778,2025
+Constant current discharge_1,2689,-2199.77,3.1079,275.5888133333334,2030
+Constant current discharge_1,2689,-2200.14,3.1067,272.53348000000005,2035
+Constant current discharge_1,2689,-2200.14,3.1057,269.47750222222226,2040
+Constant current discharge_1,2689,-2199.77,3.1042,266.4221688888889,2045
+Constant current discharge_1,2689,-2199.77,3.1029,263.3669466666667,2050
+Constant current discharge_1,2689,-2199.4,3.1017,260.3117911111111,2055
+Constant current discharge_1,2689,-2200.33,3.1008,257.25654666666674,2060
+Constant current discharge_1,2689,-2199.96,3.0995,254.20101333333338,2065
+Constant current discharge_1,2689,-2199.77,3.0983,251.1457688888889,2070
+Constant current discharge_1,2689,-2199.77,3.0967,248.0905466666667,2075
+Constant current discharge_1,2689,-2199.77,3.0955,245.03530222222227,2080
+Constant current discharge_1,2689,-2199.77,3.0943,241.9800577777778,2085
+Constant current discharge_1,2689,-2199.77,3.0939,241.3690355555556,2086
+Constant current discharge_2,2689,-5501.11,3.0304,241.3690355555556,2092
+Constant current discharge_2,2689,-5501.11,2.9796,233.72860500000004,2096
+Constant current discharge_2,2689,-5500.37,2.9551,226.08889388888892,2101
+Constant current discharge_2,2689,-5501.11,2.9371,218.44897722222225,2106
+Constant current discharge_2,2689,-5500.74,2.9216,210.8090605555556,2111
+Constant current discharge_2,2689,-5500.37,2.9079,203.1693466666667,2116
+Constant current discharge_2,2689,-5501.11,2.8949,195.52891888888894,2121
+Constant current discharge_2,2689,-5500.37,2.8834,187.8887966666667,2126
+Constant current discharge_2,2689,-5500.0,2.8717,180.24970222222225,2131
+Constant current discharge_2,2689,-5500.0,2.8611,172.6108133333334,2136
+Constant current discharge_2,2689,-5500.0,2.8509,164.9724355555556,2141
+Constant current discharge_2,2689,-5501.11,2.8407,157.33221888888892,2146
+Constant current discharge_2,2689,-5500.0,2.8307,149.69303000000002,2151
+Constant current discharge_2,2689,-5500.0,2.8208,142.05392444444448,2156
+Constant current discharge_2,2689,-5500.0,2.8103,134.4149355555556,2161
+Constant current discharge_2,2689,-5499.62,2.7997,126.77668000000004,2166
+Constant current discharge_2,2689,-5501.11,2.7886,119.13706888888893,2171
+Constant current discharge_2,2689,-5500.37,2.7765,111.49734666666672,2176
+Constant current discharge_2,2689,-5500.0,2.7632,103.85836888888892,2181
+Constant current discharge_2,2689,-5500.37,2.748,96.21915777777781,2186
+Constant current discharge_2,2689,-5501.11,2.7312,88.5787355555556,2191
+Constant current discharge_2,2689,-5499.62,2.712,80.93893555555559,2196
+Constant current discharge_2,2689,-5500.0,2.6894,73.30024666666671,2201
+Constant current discharge_2,2689,-5500.37,2.6621,65.66106888888893,2206
+Constant current discharge_2,2689,-5501.11,2.6295,58.02083555555561,2211
+Constant current discharge_2,2689,-5499.62,2.5889,50.38081333333338,2216
+Constant current discharge_2,2689,-5499.62,2.5362,42.7424355555556,2221
+Constant current discharge_2,2689,-5499.62,2.464,35.10410222222225,2226
+Constant current discharge_2,2689,-5499.25,2.3518,27.46621333333337,2231
+Constant current discharge_2,2689,-5499.62,2.1909,21.35556888888894,2235
+Constant current discharge_3,2689,-2199.77,2.5864,21.35556888888894,2241
+Constant current discharge_3,2689,-2199.77,2.5399,18.30033277777783,2245
+Constant current discharge_3,2689,-2199.77,2.4962,15.245096666666717,2250
+Constant current discharge_3,2689,-2199.77,2.4398,12.189863333333383,2255
+Constant current discharge_3,2689,-2199.77,2.3617,9.134624444444494,2260
+Constant current discharge_3,2689,-2200.33,2.2572,6.079130000000051,2265
+Constant current discharge_3,2689,-2199.4,2.1264,3.0238938888889386,2270
+Constant current discharge_3,2689,-2199.77,1.9773,-0.03134499999994844,2275
