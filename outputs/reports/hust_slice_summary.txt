@@ -1,0 +1,101 @@
+=== Sliced Data Summary (hust) ===
+Total Segments Generated: 6,137,124
+Data Columns per Segment: ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)', 'Current (A)']
+
+--- Segment Counts per Cell ---
+  Cell 1-1: 63,168 segments
+  Cell 1-2: 112,476 segments
+  Cell 1-3: 78,036 segments
+  Cell 1-4: 63,000 segments
+  Cell 1-5: 82,782 segments
+  Cell 1-6: 48,006 segments
+  Cell 1-7: 70,476 segments
+  Cell 1-8: 95,970 segments
+  Cell 10-1: 71,484 segments
+  Cell 10-2: 71,274 segments
+  Cell 10-3: 77,616 segments
+  Cell 10-4: 76,062 segments
+  Cell 10-5: 85,260 segments
+  Cell 10-6: 95,970 segments
+  Cell 10-7: 74,886 segments
+  Cell 10-8: 58,800 segments
+  Cell 2-2: 111,342 segments
+  Cell 2-3: 73,542 segments
+  Cell 2-4: 62,958 segments
+  Cell 2-5: 58,212 segments
+  Cell 2-6: 66,024 segments
+  Cell 2-7: 92,484 segments
+  Cell 2-8: 62,202 segments
+  Cell 3-1: 81,396 segments
+  Cell 3-2: 95,886 segments
+  Cell 3-3: 69,258 segments
+  Cell 3-4: 74,172 segments
+  Cell 3-5: 111,594 segments
+  Cell 3-6: 104,622 segments
+  Cell 3-7: 104,118 segments
+  Cell 3-8: 98,364 segments
+  Cell 4-1: 93,114 segments
+  Cell 4-2: 74,844 segments
+  Cell 4-3: 47,964 segments
+  Cell 4-4: 62,622 segments
+  Cell 4-5: 65,562 segments
+  Cell 4-6: 57,960 segments
+  Cell 4-7: 93,072 segments
+  Cell 4-8: 71,652 segments
+  Cell 5-1: 105,294 segments
+  Cell 5-2: 80,892 segments
+  Cell 5-3: 112,938 segments
+  Cell 5-4: 82,404 segments
+  Cell 5-5: 66,486 segments
+  Cell 5-6: 103,320 segments
+  Cell 5-7: 60,816 segments
+  Cell 6-1: 67,578 segments
+  Cell 6-2: 80,136 segments
+  Cell 6-3: 75,768 segments
+  Cell 6-4: 72,114 segments
+  Cell 6-5: 91,476 segments
+  Cell 6-6: 103,656 segments
+  Cell 6-8: 102,900 segments
+  Cell 7-1: 70,980 segments
+  Cell 7-2: 85,260 segments
+  Cell 7-3: 54,390 segments
+  Cell 7-4: 58,506 segments
+  Cell 7-5: 78,750 segments
+  Cell 7-6: 59,598 segments
+  Cell 7-7: 70,770 segments
+  Cell 7-8: 81,396 segments
+  Cell 8-1: 54,936 segments
+  Cell 8-2: 85,722 segments
+  Cell 8-3: 96,180 segments
+  Cell 8-4: 79,170 segments
+  Cell 8-5: 56,616 segments
+  Cell 8-6: 99,330 segments
+  Cell 8-7: 85,974 segments
+  Cell 8-8: 70,518 segments
+  Cell 9-1: 86,394 segments
+  Cell 9-2: 90,006 segments
+  Cell 9-3: 80,010 segments
+  Cell 9-4: 82,950 segments
+  Cell 9-5: 91,056 segments
+  Cell 9-6: 73,164 segments
+  Cell 9-7: 84,504 segments
+  Cell 9-8: 96,936 segments
+
+--- Segment Counts per Mode ---
+  Charge: 3,068,562 segments
+  Discharge: 3,068,562 segments
+
+--- Segment Counts per Scenario (SOC Label) ---
+  Scenario '-1': 2,630,196 segments
+  Scenario '-2': 1,753,464 segments
+  Scenario '0': 1,753,464 segments
+
+--- Segment Length Statistics ---
+count    6.137124e+06
+mean     5.376552e+01
+std      2.694846e+01
+min      1.200000e+01
+25%      3.300000e+01
+50%      4.400000e+01
+75%      7.300000e+01
+max      2.400000e+02
