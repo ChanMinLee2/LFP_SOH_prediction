@@ -5,6 +5,7 @@ Refactored for reproducibility based on guideline.md.
 
 import pickle
 import re
+import sys
 import zipfile
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -12,9 +13,36 @@ from typing import Dict, Optional, List, Any
 
 import numpy as np
 import pandas as pd
+
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# NumPy 2.x -> 1.x compatibility hack for loading older/newer pickles
+if np.__version__.startswith('1.'):
+    import numpy.core.multiarray
+    import numpy.core.numeric
+    import numpy.core.fromnumeric
+    import numpy.core.defchararray
+    import numpy.core.records
+    import numpy.core.memmap
+    import numpy.core.function_base
+
+    sys.modules['numpy._core'] = np.core
+    sys.modules['numpy._core.multiarray'] = np.core.multiarray
+    sys.modules['numpy._core.numeric'] = np.core.numeric
+    sys.modules['numpy._core.fromnumeric'] = np.core.fromnumeric
+    sys.modules['numpy._core.defchararray'] = np.core.defchararray
+    sys.modules['numpy._core.records'] = np.core.records
+    sys.modules['numpy._core.memmap'] = np.core.memmap
+    sys.modules['numpy._core.function_base'] = np.core.function_base
+elif np.__version__.startswith('2.'):
+    try:
+        sys.modules['numpy.core'] = np._core
+        sys.modules['numpy.core.multiarray'] = np._core.multiarray
+    except AttributeError:
+        pass
+        pass
 
 # ---------------------------------------------------------------------------
 # Paths (relative to project root; override via MIT_DATA_DIR / HUST_DATA_DIR)

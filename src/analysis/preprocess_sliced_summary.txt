@@ -1,0 +1,7 @@
+=== 📊 Sliced Data Structure Summary ===
+Total segments length : 4813116
+Single segment type   : <class 'dict'>
+Segment Dictionary Keys: ['cell', 'cyc', 'df', 'soc_label', 'mode_label', 'length_p', 'rul', 'capacity', 'cycle_key']
+Inner DataFrame shape : (64, 4)
+Inner DataFrame columns: ['Time (s)', 'Voltage (V)', 'Current (A)', 'Temperature (°C)']
+=========================================
