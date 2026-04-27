@@ -1,0 +1,45 @@
+=== MIT Unified Dataset Audit ===
+1. Total Cells loaded: 135
+2. Cycle Stats per Cell: Min=169, Max=2236, Avg=848.9
+
+3. Unified DataFrame Schema (Cell b1c0, Cyc 1):
+   - Columns: ['Time (s)', 'Voltage (V)', 'Current (A)', 'Temperature (°C)', 'capacity']
+   - Shape: (1087, 5)
+   - Data Types:
+Time (s)            float64
+Voltage (V)         float64
+Current (A)         float64
+Temperature (°C)    float64
+capacity            float64
+dtype: object
+
+4. Preprocessing Readiness Check:
+   - Time info available: True
+   - Voltage info available: True
+   - Current info available: True
+
+5. Sample Data Preview (Cell b1c0, Cyc 1):
+   Time (s)  Voltage (V)  Current (A)  Temperature (°C)  capacity
+0  0.000000     2.026416     0.000000         31.632496  0.000000
+1  0.002417     2.039388     0.215908         31.632496  0.000001
+2  0.002912     2.051660     0.359831         31.632496  0.000001
+3  0.003212     2.063070     0.467846         31.632496  0.000001
+4  0.003498     2.076204     0.575877         31.632496  0.000001
+       Time (s)  Voltage (V)  Current (A)  Temperature (°C)  capacity
+1082  54.357120     1.999842    -0.034227         31.712118  1.070688
+1083  54.358155     2.002296    -0.034227         31.712118  1.070689
+1084  54.365115     2.012406    -0.034227         31.712118  1.070689
+1085  54.372673     2.022461    -0.034227         31.712118  1.070689
+1086  54.374827     2.025040     0.000000         31.712118  1.071042 
+
+          Time (s)  Voltage (V)  Current (A)  Temperature (°C)     capacity
+count  1087.000000  1087.000000  1087.000000       1087.000000  1087.000000
+mean     26.317435     3.121951    -0.095439         31.875011     0.679727
+std      17.275765     0.511749     2.912048          1.607385     0.401605
+min       0.000000     1.999541    -4.001016         29.566130     0.000000
+25%      10.684953     2.941313    -3.999758         30.569664     0.297653
+50%      27.106520     3.373941     0.113451         31.632496     0.880018
+75%      42.017335     3.488662     3.598586         32.811613     1.051167
+max      54.374827     3.600374     3.601136         35.652016     1.071042
+   - [MIT Note] Current converted to Ampere (A) from loader.
+===========================================

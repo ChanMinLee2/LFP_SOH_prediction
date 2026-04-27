@@ -1,26 +1,73 @@
-first cell(1-1) first cycle
-                           Status  Cycle number  Current (mA)  Voltage (V)  \
-0         Constant current charge             1       5498.13     2.795615   
-1         Constant current charge             1       5498.51     2.953584   
-2         Constant current charge             1       5498.51     3.074115   
-3         Constant current charge             1       5498.51     3.162957   
-4         Constant current charge             1       5498.13     3.225859   
-..                            ...           ...           ...          ...   
-831  Constant current discharge_3             1      -2200.14     2.525922   
-832  Constant current discharge_3             1      -2199.59     2.432507   
-833  Constant current discharge_3             1      -2199.40     2.304005   
-834  Constant current discharge_3             1      -2199.77     2.133457   
-835  Constant current discharge_3             1      -2199.77     1.913902   
+=== HUST Unified Dataset Audit ===
+1. Total Cells loaded: 77
+2. Cycle Stats per Cell: Min=1142, Max=2689, Avg=1897.7
 
-     Capacity (mAh)  Time (s)  Current (A)  
-0          0.000000         0      5.49813  
-1          7.636397         4      5.49851  
-2         15.273111         9      5.49851  
-3         22.909931        14      5.49851  
-4         30.546642        19      5.49813  
-..              ...       ...          ...  
-831       11.099738      4163     -2.20014  
-832        8.044227      4168     -2.19959  
-833        4.989471      4173     -2.19940  
-834        1.934093      4178     -2.19977  
-835        1.323004      4179     -2.19977  
+3. Unified DataFrame Schema (Cell 1-1, Cyc 1):
+   - Columns: ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)', 'capacity', 'Current (A)']
+   - Shape: (836, 8)
+   - Data Types:
+Status             object
+Cycle number        int64
+Current (mA)      float64
+Voltage (V)       float64
+Capacity (mAh)    float64
+Time (s)            int64
+capacity          float64
+Current (A)       float64
+dtype: object
+
+4. Preprocessing Readiness Check:
+   - Time info available: True
+   - Voltage info available: True
+   - Current info available: True
+
+5. Sample Data Preview (Cell 1-1, Cyc 1):
+                    Status  Cycle number  Current (mA)  Voltage (V)  \
+0  Constant current charge             1       5498.13       2.7731   
+1  Constant current charge             1       5498.51       2.9811   
+2  Constant current charge             1       5498.51       3.0912   
+3  Constant current charge             1       5498.51       3.1606   
+4  Constant current charge             1       5498.13       3.2118   
+
+   Capacity (mAh)  Time (s)  capacity  Current (A)  
+0        0.000000         0  0.000000      5.49813  
+1        7.636397         4  0.007636      5.49851  
+2       15.273111         9  0.015273      5.49851  
+3       22.909931        14  0.022910      5.49851  
+4       30.546642        19  0.030547      5.49813  
+                    Status  Cycle number  Current (mA)  Voltage (V)  \
+831  Constant current discharge_3             1      -2200.14       2.5269   
+832  Constant current discharge_3             1      -2199.59       2.4581   
+833  Constant current discharge_3             1      -2199.40       2.3468   
+834  Constant current discharge_3             1      -2199.77       2.0470   
+835  Constant current discharge_3             1      -2199.77       1.9481   
+
+     Capacity (mAh)  Time (s)  capacity  Current (A)  
+831       11.099738      4163  0.011100     -2.20014  
+832        8.044227      4168  0.008044     -2.19959  
+833        4.989471      4173  0.004989     -2.19940  
+834        1.934093      4178  0.001934     -2.19977  
+835        1.323004      4179  0.001323     -2.19977 
+
+       Cycle number  Current (mA)  Voltage (V)  Capacity (mAh)     Time (s)  \
+count         836.0    836.000000   836.000000      836.000000   836.000000   
+mean            1.0     -4.839051     3.306669      668.786929  2101.137560   
+std             0.0   2733.094014     0.209337      345.594204  1207.510964   
+min             1.0  -5499.620000     1.948100        0.000000     0.000000   
+25%             1.0  -1099.700000     3.191225      394.432932  1064.750000   
+50%             1.0  -1099.510000     3.242250      657.282874  2104.500000   
+75%             1.0   1099.510000     3.477650      987.012003  3143.250000   
+max             1.0   5500.000000     3.599900     1175.622204  4179.000000   
+
+         capacity  Current (A)  
+count  836.000000   836.000000  
+mean     0.668787    -0.004839  
+std      0.345594     2.733094  
+min      0.000000    -5.499620  
+25%      0.394433    -1.099700  
+50%      0.657283    -1.099510  
+75%      0.987012     1.099510  
+max      1.175622     5.500000  
+
+   - [HUST Note] Voltage smoothing and Current unit conversion (mA->A) pending in Phase 1.
+===========================================
