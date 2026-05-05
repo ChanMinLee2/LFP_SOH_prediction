@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 # 1. 'src' 모듈을 찾을 수 있도록 프로젝트 루트를 경로에 추가
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -35,43 +35,13 @@ class ConfigNamespace:
 
 # config 객체 생성
 config = ConfigNamespace(HYPERPARAMS)
+config.save_dir = Path("./outputs/checkpoints")
+config.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # ==========================================
-# 1. Configuration & Hyperparameters
+# 1. Utilities (Seeding)
 # ==========================================
-class TrainConfig:
-    # Data params
-    dataset_types = ["mit", "hust"]
-    val_ratio = 0.2
-    test_ratio = 0.2
-
-    add_seq_dim = False  # MLP는 False, LSTM/iTransformer는 True
-    input_dim = 45  # HI features dimension
-    target_col = "capacity"  # Prediction target
-
-    # Physics-Informed (PI) 파라미터
-    use_pi = True  # True면 PI 모듈 활성화, False면 기본 모델 학습
-    alpha = 0.1  # PDE Loss(동역학 제약)의 가중치
-    beta = 0.1  # 단조성(Monotonicity) Loss 가중치 (필요 시 사용)
-
-    processed_data_root = Path("D:/chanminLee/data_store/LFP_SOH_estimation")
-
-    # Hyperparameters
-    batch_size = 512
-    epochs = 300
-    learning_rate = 5e-4
-    weight_decay = 1e-4
-
-    # Scheduler & Early Stopping
-    patience = 40
-    factor = 0.5
-    min_lr = 1e-7
-
-    # System
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    seed = 42
-    save_dir = Path("./outputs/checkpoints")
 
 
 def seed_everything(seed):
@@ -116,9 +86,10 @@ class BatterySOHDataset(Dataset):
 
 def get_dataloaders(config):
     full_pool = []
-    print(f"[Info] Searching for data in: {config.processed_data_root}")
+    root_path = Path(config.processed_data_root)
+    print(f"[Info] Searching for data in: {root_path}")
     for d_type in config.dataset_types:
-        data_path = config.processed_data_root / f"{d_type}_optimized_tensors.pkl"
+        data_path = root_path / f"{d_type}_optimized_tensors.pkl"
         if not data_path.exists():
             print(f"[Warning] Data not found for {d_type} at {data_path}")
             continue
@@ -257,7 +228,7 @@ def save_hyperparameters(config_dict):
 def train_epoch(model, dataloader, criterion, optimizer, config):
     model.train()
     running_loss = 0.0
-    for x, t, y in dataloader:  # [수정] t(시간) 언패킹
+    for x, t, y in tqdm(dataloader, desc="  Training Batch", leave=False):  # [수정] tqdm 추가
         x, t, y = x.to(config.device), t.to(config.device), y.to(config.device)
         optimizer.zero_grad()
 
@@ -292,9 +263,9 @@ def validate_epoch(model, dataloader, criterion, config):
         for x, t, y in dataloader:  # [수정] t(시간) 언패킹
             x, t, y = x.to(config.device), t.to(config.device), y.to(config.device)
 
-            # [추가] 평가 시에는 PDE 연산 생략 (return_pde=False)
+            # [수정] 평가 시에도 PI Wrapper는 t를 필요로 함
             if config.use_pi:
-                preds = model(x, return_pde=False).squeeze(-1)
+                preds = model(x, t=t, return_pde=False).squeeze(-1)
             else:
                 preds = model(x).squeeze(-1)
 
@@ -324,11 +295,9 @@ def fit(model, train_loader, val_loader, config, model_name="BestModel"):
     # 저장 이름에 PI 사용 여부 명시
     base_name = f"{model_name}_{'PI_' if config.use_pi else ''}combined_capacity"
     checkpoint_path = config.save_dir / f"{base_name}.pth"
-    param_save_path = config.save_dir / f"{base_name}_params.txt"
 
-    save_hyperparameters(config, param_save_path, model_name)  # 임의 구현 함수
-
-    # early_stopping = EarlyStopping(...)
+    # EarlyStopping 설정: 가장 낮은 Val Loss를 가진 모델을 checkpoint_path에 저장
+    early_stopping = EarlyStopping(patience=config.patience, verbose=True, path=checkpoint_path)
     history = {"train_loss": [], "val_loss": []}
 
     print(
@@ -343,18 +312,22 @@ def fit(model, train_loader, val_loader, config, model_name="BestModel"):
         history["val_loss"].append(val_loss)
 
         scheduler.step(val_loss)
-        # early_stopping(val_loss, model)
+        early_stopping(val_loss, model)
 
         if epoch % 10 == 0 or epoch == 1:
             print(
                 f"Epoch [{epoch:03d}/{config.epochs}] | Train Loss: {train_loss:.6f} | Val Loss: {val_loss:.6f}"
             )
 
-        # if early_stopping.early_stop:
-        #     print(f"Early stopping at epoch {epoch}")
-        #     break
+        if early_stopping.early_stop:
+            print(f"Early stopping at epoch {epoch}")
+            break
 
-    # model.load_state_dict(torch.load(checkpoint_path))
+    # 학습 종료 후 가장 성능이 좋았던 모델 가중치 로드
+    if checkpoint_path.exists():
+        print(f"[Info] Loading best model weights from {checkpoint_path}")
+        model.load_state_dict(torch.load(checkpoint_path))
+        
     return model, history
 
 
@@ -369,6 +342,15 @@ if __name__ == "__main__":
 
     # 1. Load Data
     train_loader, val_loader, test_loader = get_dataloaders(config)
+
+    # [추가] 데이터 형태 및 피처 정보 출력
+    x_sample, t_sample, y_sample = next(iter(train_loader))
+    print(f"\n[Data Check] Input x shape: {x_sample.shape}")
+    print(f"[Data Check] Time t shape: {t_sample.shape}")
+    print(f"[Data Check] Target y shape: {y_sample.shape}")
+    # 첫 번째 샘플의 앞쪽 5개 피처 값 확인
+    sample_feats = x_sample[0, :5] if len(x_sample.shape) == 2 else x_sample[0, 0, :5]
+    print(f"[Data Check] Sample features (first 5): {sample_feats.numpy()}")
 
     # 2. Select Model (설정 파일의 모델 이름과 종속 파라미터 가져오기)
     model_name = config.model_name

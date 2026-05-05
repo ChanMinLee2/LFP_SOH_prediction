@@ -54,17 +54,20 @@ class InvertedTransformer(nn.Module):
 
 
 class SimpleMLP(nn.Module):
-    def __init__(self, input_dim=40, output_dim=1):
+    def __init__(self, input_dim=40, output_dim=1, hidden_dims=[128, 64], dropout=0.2):
         super(SimpleMLP, self).__init__()
-        self.net = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(input_dim, 128),
-            nn.GELU(),
-            nn.Dropout(0.2),
-            nn.Linear(128, 64),
-            nn.GELU(),
-            nn.Linear(64, output_dim),
-        )
+        layers = [nn.Flatten()]
+
+        in_features = input_dim
+        for h_dim in hidden_dims:
+            layers.append(nn.Linear(in_features, h_dim))
+            layers.append(nn.GELU())
+            if dropout > 0:
+                layers.append(nn.Dropout(dropout))
+            in_features = h_dim
+
+        layers.append(nn.Linear(in_features, output_dim))
+        self.net = nn.Sequential(*layers)
 
     def forward(self, x):
         return self.net(x)
@@ -102,19 +105,29 @@ class PhysicsInformedWrapper(nn.Module):
         return_pde=False : 일반적인 추론(Inference) 모드. SOH만 반환.
         return_pde=True  : 훈련(Training) 모드. SOH와 PDE 잔차(Residual) 반환.
         """
+        if return_pde:
+            assert (
+                t is not None
+            ), "PDE 계산을 위해서는 시간(Cycle) 정보 't'가 명시적으로 필요합니다."
+            # [중요] 연산(cat) 전에 requires_grad를 활성화해야 미분 경로가 유지됩니다.
+            x.requires_grad_(True)
+            t.requires_grad_(True)
+
+        # u = F(x, t)가 되도록 x와 t를 결합
+        if t is not None:
+            if len(x.shape) == 3:  # (B, L, D) - LSTM, iTransformer
+                t_expanded = t.unsqueeze(1).expand(-1, x.size(1), -1)
+                xt = torch.cat([x, t_expanded], dim=-1)
+            else:  # (B, D) - MLP
+                xt = torch.cat([x, t], dim=-1)
+        else:
+            xt = x
+
         if not return_pde:
-            return self.solution_net(x)
+            return self.solution_net(xt)
 
-        assert (
-            t is not None
-        ), "PDE 계산을 위해서는 시간(Cycle) 정보 't'가 명시적으로 필요합니다."
-
-        # 자동 미분(Autograd)을 위해 기울기 계산 활성화
-        x.requires_grad_(True)
-        t.requires_grad_(True)
-
-        # 1. Solution Network 예측: u = F(x)
-        u = self.solution_net(x)
+        # 1. Solution Network 예측: u = F(xt)  [xt는 x와 t의 결합]
+        u = self.solution_net(xt)
 
         # 2. 편미분 계산 (u_x, u_t)
         u_x = torch.autograd.grad(
@@ -138,6 +151,7 @@ class PhysicsInformedWrapper(nn.Module):
         u_x_flat = u_x.view(u_x.size(0), -1)  # (B, feature_dim)
 
         # 4. Dynamics Network 입력 생성 및 추론
+        # 입력 차원: t(1) + x(D) + u(1) + u_t(1) + u_x(D)
         g_input = torch.cat([t, x_flat, u, u_t, u_x_flat], dim=1)  # (B, g_input_dim)
         g_out = self.dynamics_net(g_input)
 
@@ -177,14 +191,17 @@ def get_gpr_model():
 def get_model(model_name, use_pi=False, feature_dim=40, **kwargs):
     model_name = model_name.upper()
 
+    # [수정] PI 모드일 경우 시간(t)이 추가되므로 입력 차원을 1 늘림
+    actual_input_dim = feature_dim + 1 if use_pi else feature_dim
+
     # --- Deep Learning Models ---
     if model_name in ["ITRANSFORMER", "LSTM", "MLP"]:
         if model_name == "ITRANSFORMER":
-            base_model = InvertedTransformer(num_variates=feature_dim, **kwargs)
+            base_model = InvertedTransformer(num_variates=actual_input_dim, **kwargs)
         elif model_name == "LSTM":
-            base_model = VanillaLSTM(input_dim=feature_dim, **kwargs)
+            base_model = VanillaLSTM(input_dim=actual_input_dim, **kwargs)
         elif model_name == "MLP":
-            base_model = SimpleMLP(input_dim=feature_dim, **kwargs)
+            base_model = SimpleMLP(input_dim=actual_input_dim, **kwargs)
 
         # PI 옵션 활성화 시 Wrapper로 감싸서 반환
         if use_pi:

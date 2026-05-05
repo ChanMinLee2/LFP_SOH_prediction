@@ -9,6 +9,7 @@ HYPERPARAMS = {
     "save_root": "../experiments/parameter_log",  # 저장할 기본 경로 (원하시는 경로로 수정)
     # 2. Data Options
     "dataset_types": ["mit", "hust"],
+    "processed_data_root": "D:/chanminLee/data_store/LFP_SOH_estimation",
     "val_ratio": 0.2,
     "test_ratio": 0.2,
     "input_dim": 45,
