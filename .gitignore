@@ -10,3 +10,6 @@
 *.md
 HUST_data
 MIT_data
+
+*.pth
+/experiments/*/*.pkl

@@ -1,0 +1,2 @@
+# case 1
+only mit, 8 models, 48D(45D + 3 labels), PI on, t/2500 norm, lr 0.0005, seed 42

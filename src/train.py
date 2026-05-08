@@ -2,7 +2,7 @@ import os
 import sys
 from pathlib import Path
 
-# 1. 'src' 모듈을 찾을 수 있도록 프로젝트 루트를 경로에 추가
+# 'src' 모듈을 찾을 수 있도록 프로젝트 루트를 경로에 추가
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -10,6 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
 import copy
 import pickle
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -18,32 +19,55 @@ import datetime
 from sklearn.model_selection import train_test_split
 import json
 from tqdm import tqdm
+import time
 
 # NumPy 버전 호환성 패치 (pickle load 오류 방지)
 if not hasattr(np, "_core"):
     sys.modules["numpy._core"] = np.core
 
-from src.models import get_model
-from hyperparams import HYPERPARAMS
+import matplotlib.pyplot as plt
+from src.models import get_model, PhysicsInformedWrapper
+from src.hyperparams import HYPERPARAMS, MODEL_MAP
 
 
 # 딕셔너리를 객체(Object)처럼 점(.)으로 접근하기 위한 래퍼 클래스
 class ConfigNamespace:
     def __init__(self, d):
         self.__dict__.update(d)
+        self.project_root = Path(__file__).resolve().parent.parent
 
+    def get_version_str(self):
+        minor = MODEL_MAP.get(self.model_name.upper(), 0)
+        return f"{self.major_version}.{minor}.{self.patch_version}"
 
-# config 객체 생성
-config = ConfigNamespace(HYPERPARAMS)
-config.save_dir = Path("./outputs/checkpoints")
-config.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    def setup_experiment_dir(self):
+        v_str = self.get_version_str()
+        self.exp_dir = self.project_root / "experiments" / v_str
+        self.exp_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save config.json
+        config_path = self.exp_dir / "config.json"
+        with open(config_path, "w", encoding="utf-8") as f:
+            serializable_config = {}
+            for k, v in self.__dict__.items():
+                if k == "project_root":
+                    continue
+                if isinstance(v, (Path, torch.device)):
+                    serializable_config[k] = str(v)
+                else:
+                    serializable_config[k] = v
+
+            json.dump(serializable_config, f, indent=4, ensure_ascii=False)
+
+        # Update internal paths to point to exp_dir
+        self.checkpoint_path = self.exp_dir / "best_model.pth"
+        self.log_path = self.exp_dir / "train_log.txt"
+        return self.exp_dir
 
 
 # ==========================================
 # 1. Utilities (Seeding)
 # ==========================================
-
-
 def seed_everything(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -56,32 +80,38 @@ def seed_everything(seed):
 # ==========================================
 class BatterySOHDataset(Dataset):
     def __init__(self, data_list, target_col="capacity", add_seq_dim=False):
-        # x: (N, 45)
-        self.x = torch.tensor(
-            np.array([item["x"] for item in data_list]), dtype=torch.float32
-        )
+        # x: (N, 48) [45 HI + 3 Meta]
+        x_raw = np.array([item["x"] for item in data_list])
+        y_raw = np.array([item[target_col] for item in data_list])
 
-        # [추가] t: (N, 1) - PI 모듈의 편미분을 위한 시간(Cycle) 데이터 추출
-        # 데이터셋 딕셔너리에 'cyc' 키가 있다고 가정합니다. 없다면 인덱스(i)를 임시로 사용.
-        self.t = torch.tensor(
-            np.array([item.get("cyc", i) for i, item in enumerate(data_list)]),
-            dtype=torch.float32,
-        ).unsqueeze(-1)
+        # t: (N, 1) - PI 모듈의 편미분을 위한 시간(Cycle) 데이터 추출
+        t_raw = np.array([item.get("cyc", i) for i, item in enumerate(data_list)])
 
-        # y: (N,)
-        self.y = torch.tensor(
-            np.array([item[target_col] for item in data_list]), dtype=torch.float32
-        )
+        # mode: (N, 1) - 충전(1)/방전(0) 라벨
+        m_raw = np.array([item.get("mode_label", 1) for item in data_list])
+
+        # NaN 체크 및 처리
+        x_raw = np.nan_to_num(x_raw, nan=0.0)
+        y_raw = np.nan_to_num(y_raw, nan=0.0)
+        t_raw = np.nan_to_num(t_raw, nan=0.0)
+
+        # t_raw 정규화 (거의 0~1 범위로)
+        self.t_max = 2500.0
+        t_norm = t_raw / self.t_max
+
+        self.x = torch.tensor(x_raw, dtype=torch.float32)
+        self.t = torch.tensor(t_norm, dtype=torch.float32).unsqueeze(-1)
+        self.m = torch.tensor(m_raw, dtype=torch.float32).unsqueeze(-1)
+        self.y = torch.tensor(y_raw, dtype=torch.float32)
 
         if add_seq_dim:
-            self.x = self.x.unsqueeze(1)  # (N, 45) -> (N, 1, 45)
+            self.x = self.x.unsqueeze(1)  # (N, 48) -> (N, 1, 48)
 
     def __len__(self):
         return len(self.x)
 
     def __getitem__(self, idx):
-        # [수정] DataLoader가 x(피처), t(시간), y(라벨) 3가지를 반환하도록 변경
-        return self.x[idx], self.t[idx], self.y[idx]
+        return self.x[idx], self.t[idx], self.m[idx], self.y[idx]
 
 
 def get_dataloaders(config):
@@ -98,7 +128,6 @@ def get_dataloaders(config):
         try:
             with open(data_path, "rb") as f:
                 pool = pickle.load(f)
-                # 데이터 출처 표시
                 for item in pool:
                     item["source"] = d_type
                 full_pool.extend(pool)
@@ -117,7 +146,6 @@ def get_dataloaders(config):
     unique_cells = list(set([(item["source"], item["cell"]) for item in full_pool]))
     np.random.shuffle(unique_cells)
 
-    # 6:2:2 split
     n_cells = len(unique_cells)
     test_idx = int(n_cells * (1 - config.test_ratio))
     val_idx = int(test_idx * (1 - config.val_ratio / (1 - config.test_ratio)))
@@ -195,89 +223,178 @@ class EarlyStopping:
         self.val_loss_min = val_loss
 
 
-def save_hyperparameters(config_dict):
-    """
-    하이퍼파라미터를 규칙에 맞는 파일명으로 저장합니다.
-    파일명 형식: {testcase_number}_{MM-DD-HH}_{params}.json
-    """
-    save_root = Path(config_dict["save_root"])
-    save_root.mkdir(parents=True, exist_ok=True)
-
-    tc_num = config_dict["testcase_number"]
-    now_str = datetime.datetime.now().strftime("%m-%d-%H")  # MM-DD-HH
-
-    # params 요약 문자열 만들기 (예: MLP_PI-O_lr0.0005)
-    # model_n = config_dict["model_name"]
-    # pi_stat = "PI-O" if config_dict["use_pi"] else "PI-X"
-    # lr_stat = f"lr{config_dict['learning_rate']}"
-    # params_str = f"{model_n}_{pi_stat}_{lr_stat}"
-
-    # 최종 파일명
-    file_name = f"{tc_num:03d}_{now_str}.json"
-    file_path = save_root / file_name
-
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(config_dict, f, indent=4, ensure_ascii=False)
-
-    print(
-        f"\n[Info] 하이퍼파라미터 셋이 다음 경로에 저장되었습니다:\n -> {file_path}\n"
-    )
-    return file_path
-
-
 def train_epoch(model, dataloader, criterion, optimizer, config):
     model.train()
     running_loss = 0.0
-    for x, t, y in tqdm(dataloader, desc="  Training Batch", leave=False):  # [수정] tqdm 추가
-        x, t, y = x.to(config.device), t.to(config.device), y.to(config.device)
+    running_data_loss = 0.0  # [추가] Data Loss 누적
+    running_pde_loss = 0.0  # [추가] PDE Loss 누적
+    processed_samples = 0
+
+    for i, (x, t, m, y) in enumerate(
+        tqdm(dataloader, desc="  Training Batch", leave=False)
+    ):
+        x, t, m, y = (
+            x.to(config.device),
+            t.to(config.device),
+            m.to(config.device),
+            y.to(config.device),
+        )
+
+        # [수정] LSTM, iTransformer 등 시퀀스 차원이 필요한 모델을 위해 동적으로 차원 추가
+        if getattr(config, "add_seq_dim", False) and len(x.shape) == 2:
+            x = x.unsqueeze(1)
+
+        # 입력값 유효성 체크
+        if not (
+            torch.isfinite(x).all()
+            and torch.isfinite(t).all()
+            and torch.isfinite(y).all()
+        ):
+            print(f"\n[Error] Non-finite values detected in input batch {i}!")
+            continue
+
         optimizer.zero_grad()
 
         # PI 옵션에 따른 분기 처리
         if config.use_pi:
-            # 1. PI 모듈 추론: SOH 예측값과 PDE 잔차 반환
-            preds, pde_residual = model(x, t=t, return_pde=True)
+            # CuDNN RNN의 Double Backward 미지원 에러 우회
+            with torch.backends.cudnn.flags(enabled=False):
+                preds, pde_residual = model(x, t=t, mode=m, return_pde=True)
             preds = preds.squeeze(-1)
 
-            # 2. PINN Loss 계산
-            loss_data = criterion(preds, y)  # L_data (일반 예측 오차)
-            loss_pde = torch.mean(pde_residual**2)  # L_pde (동역학 제약 위배 페널티)
-
-            # 3. Total Loss 계산 (단조성 Loss는 배치 내 순서가 뒤섞여 있으므로 생략하거나 정렬 후 사용)
+            loss_data = criterion(preds, y)
+            loss_pde = torch.mean(pde_residual**2)
             loss = loss_data + (config.alpha * loss_pde)
+
+            if not torch.isfinite(loss):
+                print(f"\n[Error] Loss is {loss.item()} at batch {i}!")
+                print(f"  loss_data: {loss_data.item()}, loss_pde: {loss_pde.item()}")
+                optimizer.zero_grad()
+                continue
+
+            batch_data_loss = loss_data.item()
+            batch_pde_loss = loss_pde.item()
         else:
-            # PI 비활성화 시 기본 학습 방식
-            preds = model(x).squeeze(-1)
+            if isinstance(model, PhysicsInformedWrapper):
+                preds = model(x, mode=m).squeeze(-1)
+            else:
+                preds = model(x).squeeze(-1)
+
             loss = criterion(preds, y)
 
-        loss.backward()
-        optimizer.step()
-        running_loss += loss.item() * x.size(0)
+            if not torch.isfinite(loss):
+                print(f"\n[Error] Loss is {loss.item()} at batch {i}!")
+                optimizer.zero_grad()
+                continue
 
-    return running_loss / len(dataloader.dataset)
+            batch_data_loss = loss.item()
+            batch_pde_loss = 0.0
+
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        optimizer.step()
+
+        # 가중치 유효성 체크
+        is_weights_ok = True
+        for name, param in model.named_parameters():
+            if not torch.isfinite(param).all():
+                print(f"\n[Error] Parameter {name} became non-finite at batch {i}!")
+                is_weights_ok = False
+                break
+
+        if not is_weights_ok:
+            break
+
+        # [수정] 각각의 로스 성분을 분리하여 누적합산
+        running_loss += loss.item() * x.size(0)
+        running_data_loss += batch_data_loss * x.size(0)
+        running_pde_loss += batch_pde_loss * x.size(0)
+        processed_samples += x.size(0)
+
+    if processed_samples == 0:
+        return float("nan"), float("nan"), float("nan")
+
+    # [수정] 반환값 변경: Total Loss, Data Loss, PDE Loss
+    return (
+        running_loss / processed_samples,
+        running_data_loss / processed_samples,
+        running_pde_loss / processed_samples,
+    )
 
 
 def validate_epoch(model, dataloader, criterion, config):
     model.eval()
     running_loss = 0.0
+    processed_samples = 0
     with torch.no_grad():
-        for x, t, y in dataloader:  # [수정] t(시간) 언패킹
-            x, t, y = x.to(config.device), t.to(config.device), y.to(config.device)
+        for i, (x, t, m, y) in enumerate(dataloader):
+            x, t, m, y = (
+                x.to(config.device),
+                t.to(config.device),
+                m.to(config.device),
+                y.to(config.device),
+            )
 
-            # [수정] 평가 시에도 PI Wrapper는 t를 필요로 함
+            # [수정] LSTM, iTransformer 등 시퀀스 차원이 필요한 모델을 위해 동적으로 차원 추가
+            if getattr(config, "add_seq_dim", False) and len(x.shape) == 2:
+                x = x.unsqueeze(1)
+
             if config.use_pi:
-                preds = model(x, t=t, return_pde=False).squeeze(-1)
+                preds = model(x, t=t, mode=m, return_pde=False).squeeze(-1)
             else:
-                preds = model(x).squeeze(-1)
+                if isinstance(model, PhysicsInformedWrapper):
+                    preds = model(x, mode=m).squeeze(-1)
+                else:
+                    preds = model(x).squeeze(-1)
 
             loss = criterion(preds, y)
-            running_loss += loss.item() * x.size(0)
-    return running_loss / len(dataloader.dataset)
+
+            if torch.isfinite(loss):
+                running_loss += loss.item() * x.size(0)
+                processed_samples += x.size(0)
+
+    if processed_samples == 0:
+        return float("nan"), float("nan"), float("nan")
+
+    val_loss = running_loss / processed_samples
+    # Evaluation에서는 PI Loss가 계산되지 않으므로 (Total, Data, PDE) 포맷에 맞춰 반환
+    return val_loss, val_loss, 0.0
+
+
+def plot_loss_curve(history, save_path):
+    plt.figure(figsize=(10, 6))
+    plt.plot(
+        history["train_loss"], label="Train Total Loss", color="black", linewidth=2
+    )
+    plt.plot(history["val_loss"], label="Val Loss", color="red", linewidth=2)
+
+    # [추가] PI Loss가 존재하고 0보다 큰 경우에 한해 추가 로스들도 시각화
+    if "train_pde_loss" in history and sum(history["train_pde_loss"]) > 0:
+        plt.plot(
+            history["train_data_loss"],
+            label="Train Data Loss",
+            linestyle="--",
+            alpha=0.7,
+        )
+        plt.plot(
+            history["train_pde_loss"], label="Train PI Loss", linestyle="-.", alpha=0.7
+        )
+
+    plt.yscale("log")
+    plt.title("Training and Validation Loss (Log Scale)")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss (MSE)")
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.savefig(save_path)
+    plt.close()
 
 
 # ==========================================
 # 4. Training Engine
 # ==========================================
-def fit(model, train_loader, val_loader, config, model_name="BestModel"):
+def fit(model, train_loader, val_loader, config):
+    model_name = config.model_name
     criterion = nn.MSELoss()
     optimizer = optim.AdamW(
         model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
@@ -288,97 +405,189 @@ def fit(model, train_loader, val_loader, config, model_name="BestModel"):
         factor=config.factor,
         patience=15,
         min_lr=config.min_lr,
-        verbose=True,
+        verbose=False,
     )
 
-    config.save_dir.mkdir(parents=True, exist_ok=True)
-    # 저장 이름에 PI 사용 여부 명시
-    base_name = f"{model_name}_{'PI_' if config.use_pi else ''}combined_capacity"
-    checkpoint_path = config.save_dir / f"{base_name}.pth"
+    checkpoint_path = config.checkpoint_path
+    log_path = config.log_path
 
-    # EarlyStopping 설정: 가장 낮은 Val Loss를 가진 모델을 checkpoint_path에 저장
-    early_stopping = EarlyStopping(patience=config.patience, verbose=True, path=checkpoint_path)
-    history = {"train_loss": [], "val_loss": []}
+    early_stopping = EarlyStopping(
+        patience=config.patience, verbose=True, path=checkpoint_path
+    )
+
+    # [수정] 히스토리에 Data Loss, PI Loss 기록 공간 추가
+    history = {
+        "train_loss": [],
+        "train_data_loss": [],
+        "train_pde_loss": [],
+        "val_loss": [],
+        "epoch_time": [],
+    }
 
     print(
-        f"--- Training Start (Model: {model_name} | PI Enabled: {config.use_pi} | Target: {config.target_col}) ---"
+        f"\n>>> Starting Experiment: {config.get_version_str()} (Model: {model_name} | PI: {config.use_pi})"
     )
-    for epoch in range(1, config.epochs + 1):
-        # [수정] train_epoch에 device 대신 config 전체를 넘기도록 변경 (내부에서 use_pi 판단)
-        train_loss = train_epoch(model, train_loader, criterion, optimizer, config)
-        val_loss = validate_epoch(model, val_loader, criterion, config)
 
-        history["train_loss"].append(train_loss)
-        history["val_loss"].append(val_loss)
+    # [수정] 훈련 시작 전 로그 파일 헤더에 Data Loss, PI Loss 컬럼 추가
+    with open(log_path, "w", encoding="utf-8") as f:
+        f.write("Epoch\tTrain_Total\tTrain_Data\tTrain_PI\tVal_Loss\tEpoch_Time(s)\n")
 
-        scheduler.step(val_loss)
-        early_stopping(val_loss, model)
+    for epoch in tqdm(range(1, config.epochs + 1), desc="Epochs"):
+        start_time = time.time()
 
-        if epoch % 10 == 0 or epoch == 1:
-            print(
-                f"Epoch [{epoch:03d}/{config.epochs}] | Train Loss: {train_loss:.6f} | Val Loss: {val_loss:.6f}"
+        # [수정] train_epoch 및 validate_epoch에서 3개의 로스 반환값을 받음
+        train_total, train_data, train_pde = train_epoch(
+            model, train_loader, criterion, optimizer, config
+        )
+        val_total, _, _ = validate_epoch(model, val_loader, criterion, config)
+
+        epoch_time = time.time() - start_time
+
+        # [수정] 로그 파일에 세부 내역 저장
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(
+                f"{epoch:04d}\t{train_total:.6f}\t{train_data:.6f}\t{train_pde:.6f}\t{val_total:.6f}\t{epoch_time:.4f}\n"
             )
 
+        # [수정] 콘솔 출력 시 PI 여부에 따라 포맷 변경
+        if config.use_pi:
+            print(
+                f"  Epoch [{epoch:03d}/{config.epochs}] | Train: {train_total:.6f} (Data: {train_data:.6f}, PI: {train_pde:.6f}) | "
+                f"Val: {val_total:.6f} | Time: {epoch_time:.2f}s | LR: {optimizer.param_groups[0]['lr']:.2e}"
+            )
+        else:
+            print(
+                f"  Epoch [{epoch:03d}/{config.epochs}] | Train: {train_total:.6f} | "
+                f"Val: {val_total:.6f} | Time: {epoch_time:.2f}s | LR: {optimizer.param_groups[0]['lr']:.2e}"
+            )
+
+        history["train_loss"].append(train_total)
+        history["train_data_loss"].append(train_data)
+        history["train_pde_loss"].append(train_pde)
+        history["val_loss"].append(val_total)
+        history["epoch_time"].append(epoch_time)
+
+        scheduler.step(val_total)
+        early_stopping(val_total, model)
+
         if early_stopping.early_stop:
-            print(f"Early stopping at epoch {epoch}")
+            print(f"  Early stopping at epoch {epoch}")
             break
 
-    # 학습 종료 후 가장 성능이 좋았던 모델 가중치 로드
+    # 가중치 로드 및 시각화
     if checkpoint_path.exists():
-        print(f"[Info] Loading best model weights from {checkpoint_path}")
         model.load_state_dict(torch.load(checkpoint_path))
-        
-    return model, history
+
+    plot_loss_curve(history, config.exp_dir / "loss_curve.png")
+
+    return model, history, early_stopping.val_loss_min
 
 
 # ==========================================
-# 5. Main Execution (train.py 하단)
+# 5. Main Execution (Automated Pipeline)
 # ==========================================
 if __name__ == "__main__":
-    # 0. 하이퍼파라미터 저장 (지정된 네이밍 규칙 적용)
-    save_hyperparameters(HYPERPARAMS)
+    MODELS_TO_RUN = ["MLP", "LSTM", "ITRANSFORMER", "RF", "SVR", "GPR"]
 
-    seed_everything(config.seed)
+    seed_everything(HYPERPARAMS["seed"])
 
-    # 1. Load Data
-    train_loader, val_loader, test_loader = get_dataloaders(config)
+    base_config = ConfigNamespace(HYPERPARAMS)
+    base_config.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # [추가] 데이터 형태 및 피처 정보 출력
-    x_sample, t_sample, y_sample = next(iter(train_loader))
-    print(f"\n[Data Check] Input x shape: {x_sample.shape}")
-    print(f"[Data Check] Time t shape: {t_sample.shape}")
-    print(f"[Data Check] Target y shape: {y_sample.shape}")
-    # 첫 번째 샘플의 앞쪽 5개 피처 값 확인
-    sample_feats = x_sample[0, :5] if len(x_sample.shape) == 2 else x_sample[0, 0, :5]
-    print(f"[Data Check] Sample features (first 5): {sample_feats.numpy()}")
-
-    # 2. Select Model (설정 파일의 모델 이름과 종속 파라미터 가져오기)
-    model_name = config.model_name
-
-    # 모델 종류에 따라 kwargs로 넘겨줄 세부 파라미터 선택
-    specific_params = {}
-    if model_name == "MLP":
-        specific_params = config.mlp_params
-    elif model_name == "LSTM":
-        specific_params = config.lstm_params
-    elif model_name == "ITRANSFORMER":
-        specific_params = config.itransformer_params
-
-    # get_model 호출 시 설정된 특정 파라미터들을 언패킹(**)하여 전달
-    model = get_model(
-        model_name,
-        use_pi=config.use_pi,
-        feature_dim=config.input_dim,
-        output_dim=config.output_dim,
-        **specific_params,
-    ).to(config.device)
-
-    # 3. Train
-    best_model, hist = fit(
-        model, train_loader, val_loader, config, model_name=model_name
+    print(f"Using device: {base_config.device}")
+    print(f"Experiment Version: {base_config.get_version_str()}")
+    print(
+        f"Models to run: {MODELS_TO_RUN}"
+        f"\n\nStarting training pipeline...\n"
+        f"{'='*60}"
     )
 
-    # 4. Final Evaluation
-    test_loss = validate_epoch(best_model, test_loader, nn.MSELoss(), config)
-    print(f"\n[Final Results] Test MSE: {test_loss:.6f}")
-    print(f"[Final Results] Test RMSE: {np.sqrt(test_loss):.6f}")
+    train_loader, val_loader, test_loader = get_dataloaders(base_config)
+
+    results_summary = []
+
+    for model_name in MODELS_TO_RUN:
+
+        if model_name.upper() == "MLP":
+            continue
+
+        model_name_upper = model_name.upper()
+
+        current_params = copy.deepcopy(HYPERPARAMS)
+        current_params["model_name"] = model_name_upper
+
+        is_dl = model_name_upper in ["MLP", "LSTM", "ITRANSFORMER"]
+        is_ml = model_name_upper in ["RF", "SVR", "GPR"]
+
+        current_params["add_seq_dim"] = model_name_upper in ["LSTM", "ITRANSFORMER"]
+
+        cfg = ConfigNamespace(current_params)
+        cfg.device = base_config.device
+
+        exp_dir = cfg.setup_experiment_dir()
+
+        specific_params = getattr(cfg, f"{model_name.lower()}_params", {})
+        model = get_model(
+            model_name_upper,
+            use_pi=cfg.use_pi if is_dl else False,
+            feature_dim=cfg.input_dim,
+            output_dim=cfg.output_dim,
+            **specific_params,
+        )
+
+        print(
+            f"\n>>> Starting Experiment: {cfg.get_version_str()} (Model: {model_name_upper})"
+        )
+
+        if is_dl:
+            model = model.to(cfg.device)
+            best_model, hist, best_val = fit(model, train_loader, val_loader, cfg)
+            test_loss, _, _ = validate_epoch(best_model, test_loader, nn.MSELoss(), cfg)
+        else:
+            print(f"  [ML] Preparing NumPy data for {model_name_upper}...")
+            X_train = train_loader.dataset.x.numpy()
+            y_train = train_loader.dataset.y.numpy()
+            X_test = test_loader.dataset.x.numpy()
+            y_test = test_loader.dataset.y.numpy()
+
+            if len(X_train.shape) == 3:
+                X_train = X_train.reshape(X_train.shape[0], -1)
+                X_test = X_test.reshape(X_test.shape[0], -1)
+
+            print(f"  [ML] Fitting {model_name_upper}...")
+            model.fit(X_train, y_train)
+
+            y_pred = model.predict(X_test)
+            test_loss = np.mean((y_test - y_pred) ** 2)
+            best_val = 0.0
+
+            with open(cfg.checkpoint_path.with_suffix(".pkl"), "wb") as f:
+                pickle.dump(model, f)
+            print(f"  [ML] Model saved to {cfg.checkpoint_path.with_suffix('.pkl')}")
+
+        rmse = np.sqrt(test_loss)
+        print(f"  [Result] Test MSE: {test_loss:.6f} | RMSE: {rmse:.6f}")
+
+        results_summary.append(
+            {
+                "version": cfg.get_version_str(),
+                "model": model_name_upper,
+                "best_val_mse": best_val,
+                "test_mse": test_loss,
+                "test_rmse": rmse,
+            }
+        )
+
+    print("\n" + "=" * 50)
+    print("ALL EXPERIMENTS COMPLETED")
+    print("=" * 50)
+    summary_df = pd.DataFrame(results_summary)
+    print(summary_df)
+
+    summary_path = (
+        base_config.project_root
+        / "experiments"
+        / f"summary_major_{base_config.major_version}.csv"
+    )
+    summary_df.to_csv(summary_path, index=False)
+    print(f"\n[Summary] Saved to: {summary_path}")

@@ -100,16 +100,36 @@ class PhysicsInformedWrapper(nn.Module):
             nn.Linear(32, 1),  # 예측된 열화율(decay rate) 반환
         )
 
-    def forward(self, x, t=None, return_pde=False):
+    def forward(self, x, t=None, mode=None, return_pde=False):
         """
-        return_pde=False : 일반적인 추론(Inference) 모드. SOH만 반환.
-        return_pde=True  : 훈련(Training) 모드. SOH와 PDE 잔차(Residual) 반환.
+        x: (B, D) or (B, L, D)
+        mode: (B, 1) - 1: Charge, 0: Discharge
         """
+        # [추가] 피처 마스킹 로직
+        # 45 HI 구조: [0:15] 충전, [15:30] 방전, [30:45] 공통/IC
+        if mode is not None:
+            # x가 (B, D)인 경우와 (B, L, D)인 경우를 모두 처리
+            mask = torch.ones_like(x)
+            
+            # 충전 모드(1)인 경우: 방전 피처(15:30)를 0으로 마스킹
+            # 방전 모드(0)인 경우: 충전 피처(0:15)를 0으로 마스킹
+            for i in range(x.size(0)):
+                if mode[i] > 0.5: # Charge
+                    if len(x.shape) == 3:
+                        mask[i, :, 15:30] = 0
+                    else:
+                        mask[i, 15:30] = 0
+                else: # Discharge
+                    if len(x.shape) == 3:
+                        mask[i, :, 0:15] = 0
+                    else:
+                        mask[i, 0:15] = 0
+            x = x * mask
+
         if return_pde:
             assert (
                 t is not None
             ), "PDE 계산을 위해서는 시간(Cycle) 정보 't'가 명시적으로 필요합니다."
-            # [중요] 연산(cat) 전에 requires_grad를 활성화해야 미분 경로가 유지됩니다.
             x.requires_grad_(True)
             t.requires_grad_(True)
 
@@ -126,7 +146,7 @@ class PhysicsInformedWrapper(nn.Module):
         if not return_pde:
             return self.solution_net(xt)
 
-        # 1. Solution Network 예측: u = F(xt)  [xt는 x와 t의 결합]
+        # 1. Solution Network 예측: u = F(xt)
         u = self.solution_net(xt)
 
         # 2. 편미분 계산 (u_x, u_t)
