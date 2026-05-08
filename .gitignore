@@ -13,3 +13,5 @@ MIT_data
 
 *.pth
 /experiments/*/*.pkl
+
+ref/*.pdf

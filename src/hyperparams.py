@@ -3,11 +3,20 @@
 # ==========================================
 
 # 모델별 마이너 번호 매핑
-MODEL_MAP = {"MLP": 1, "LSTM": 2, "ITRANSFORMER": 3, "RF": 4, "SVR": 5, "GPR": 6}
+MODEL_MAP = {
+    "MLP": 1, 
+    "ITRANSFORMER": 2, 
+    "TABNET": 3, 
+    "XGBOOST": 4, 
+    "LIGHTGBM": 5, 
+    "RF": 6, 
+    "SVR": 7, 
+    "GPR": 8
+}
 
 HYPERPARAMS = {
     # 1. Experiment & Tracking
-    "major_version": 1,  # Parameter Set Index
+    "major_version": 2,  # Parameter Set Index
     "patch_version": 1,  # Fixed for now
     "seed": 42,
     # 2. Data Options
@@ -35,8 +44,10 @@ HYPERPARAMS = {
     "min_lr": 1e-7,
     # 6. Model-Specific Parameters
     "mlp_params": {"hidden_dims": [128, 64], "dropout": 0.2},
-    "lstm_params": {"hidden_dim": 64, "num_layers": 2},
     "itransformer_params": {"seq_len": 1, "d_model": 64, "n_heads": 4, "e_layers": 2},
+    "tabnet_params": {"hidden_dim": 64},
+    "xgboost_params": {"n_estimators": 200, "max_depth": 6, "learning_rate": 0.05},
+    "lightgbm_params": {"n_estimators": 200, "max_depth": -1, "num_leaves": 31, "learning_rate": 0.05},
     "rf_params": {"n_estimators": 200, "max_depth": 15},
     "svr_params": {"C": 100, "gamma": "scale", "kernel": "rbf"},
     "gpr_params": {"length_scale": 1.0, "noise_level": 1.0},

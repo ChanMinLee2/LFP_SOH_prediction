@@ -259,21 +259,39 @@ def train_epoch(model, dataloader, criterion, optimizer, config):
         if config.use_pi:
             # CuDNN RNN의 Double Backward 미지원 에러 우회
             with torch.backends.cudnn.flags(enabled=False):
-                preds, pde_residual = model(x, t=t, mode=m, return_pde=True)
+                preds, pde_residual, u_t = model(x, t=t, mode=m, return_pde=True)
             preds = preds.squeeze(-1)
 
             loss_data = criterion(preds, y)
             loss_pde = torch.mean(pde_residual**2)
-            loss = loss_data + (config.alpha * loss_pde)
+
+            # [추가] Monotonicity Loss: 시간에 따른 용량 변화율(u_t)이 양수(용량 증가)인 부분에 강력한 페널티 부여
+            loss_mono = torch.mean(torch.nn.functional.relu(u_t) ** 2)
+
+            # [추가/수정] Adaptive Weighting: 학습 가능한 파라미터(log_var_*)를 사용하여 각 손실 함수의 스케일을 자동 조절
+            # 참고: IEEE TIV 논문 식 (22)
+            loss_data_w = (
+                torch.exp(-model.log_var_data) * loss_data + model.log_var_data
+            )
+            loss_pde_w = torch.exp(-model.log_var_pde) * loss_pde + model.log_var_pde
+            loss_mono_w = (
+                torch.exp(-model.log_var_mono) * loss_mono + model.log_var_mono
+            )
+
+            # 통합 Loss (하이퍼파라미터 alpha, beta 대신 학습된 가중치 사용)
+            loss = loss_data_w + loss_pde_w + loss_mono_w
 
             if not torch.isfinite(loss):
                 print(f"\n[Error] Loss is {loss.item()} at batch {i}!")
-                print(f"  loss_data: {loss_data.item()}, loss_pde: {loss_pde.item()}")
+                print(
+                    f"  loss_data: {loss_data.item()}, loss_pde: {loss_pde.item()}, loss_mono: {loss_mono.item()}"
+                )
                 optimizer.zero_grad()
                 continue
 
             batch_data_loss = loss_data.item()
-            batch_pde_loss = loss_pde.item()
+            # 로깅의 편의성을 위해 물리 제약 기반 Loss(PDE + Mono)를 하나로 묶음
+            batch_pde_loss = loss_pde.item() + loss_mono.item()
         else:
             if isinstance(model, PhysicsInformedWrapper):
                 preds = model(x, mode=m).squeeze(-1)
@@ -487,7 +505,16 @@ def fit(model, train_loader, val_loader, config):
 # 5. Main Execution (Automated Pipeline)
 # ==========================================
 if __name__ == "__main__":
-    MODELS_TO_RUN = ["MLP", "LSTM", "ITRANSFORMER", "RF", "SVR", "GPR"]
+    MODELS_TO_RUN = [
+        "MLP",
+        "ITRANSFORMER",
+        "TABNET",
+        "XGBOOST",
+        "LIGHTGBM",
+        "RF",
+        "SVR",
+        "GPR",
+    ]
 
     seed_everything(HYPERPARAMS["seed"])
 
@@ -508,18 +535,17 @@ if __name__ == "__main__":
 
     for model_name in MODELS_TO_RUN:
 
-        if model_name.upper() == "MLP":
-            continue
-
         model_name_upper = model_name.upper()
 
+        if model_name_upper in ["MLP", "ITRANSFORMER", "TABNET"]:
+            continue
         current_params = copy.deepcopy(HYPERPARAMS)
         current_params["model_name"] = model_name_upper
 
-        is_dl = model_name_upper in ["MLP", "LSTM", "ITRANSFORMER"]
-        is_ml = model_name_upper in ["RF", "SVR", "GPR"]
+        is_dl = model_name_upper in ["MLP", "TABNET", "ITRANSFORMER"]
+        is_ml = model_name_upper in ["RF", "SVR", "GPR", "XGBOOST", "LIGHTGBM"]
 
-        current_params["add_seq_dim"] = model_name_upper in ["LSTM", "ITRANSFORMER"]
+        current_params["add_seq_dim"] = model_name_upper in ["ITRANSFORMER"]
 
         cfg = ConfigNamespace(current_params)
         cfg.device = base_config.device
@@ -553,6 +579,17 @@ if __name__ == "__main__":
             if len(X_train.shape) == 3:
                 X_train = X_train.reshape(X_train.shape[0], -1)
                 X_test = X_test.reshape(X_test.shape[0], -1)
+
+            # [추가] GPR 메모리 부족(OOM) 방지를 위한 훈련 데이터 서브샘플링
+            if model_name_upper == "GPR":
+                max_gpr_samples = 5000
+                if len(X_train) > max_gpr_samples:
+                    print(
+                        f"  [Warning] GPR memory limit: Subsampling training data from {len(X_train)} to {max_gpr_samples}."
+                    )
+                    idx = np.random.choice(len(X_train), max_gpr_samples, replace=False)
+                    X_train = X_train[idx]
+                    y_train = y_train[idx]
 
             print(f"  [ML] Fitting {model_name_upper}...")
             model.fit(X_train, y_train)

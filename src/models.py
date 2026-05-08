@@ -9,18 +9,33 @@ from sklearn.gaussian_process.kernels import RBF, WhiteKernel
 # 1. 딥러닝 모델 (PyTorch 기반)
 # ==========================================
 
-
-class VanillaLSTM(nn.Module):
-    def __init__(self, input_dim=40, hidden_dim=64, num_layers=2, output_dim=1):
-        super(VanillaLSTM, self).__init__()
-        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
-        self.fc = nn.Linear(hidden_dim, output_dim)
+class TabularAttentionNet(nn.Module):
+    """
+    정형 데이터(Tabular Data)의 특성을 고려하여, 
+    각 Feature의 중요도를 스스로 학습하는 간소화된 Attention 기반 MLP (TabNet 영감)
+    """
+    def __init__(self, input_dim=40, output_dim=1, hidden_dim=64):
+        super(TabularAttentionNet, self).__init__()
+        self.feature_extractor = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, hidden_dim)
+        )
+        self.attention = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.Softmax(dim=-1)
+        )
+        self.fc = nn.Sequential(
+            nn.Linear(hidden_dim, 32),
+            nn.GELU(),
+            nn.Linear(32, output_dim)
+        )
 
     def forward(self, x):
-        out, (h_n, c_n) = self.lstm(x)
-        last_step_out = out[:, -1, :]
-        return self.fc(last_step_out)
-
+        feat = self.feature_extractor(x)
+        attn = self.attention(x)
+        out = feat * attn  # Feature별 가중치 곱 (Sparse Attention 효과)
+        return self.fc(out)
 
 class InvertedTransformer(nn.Module):
     def __init__(
@@ -100,6 +115,12 @@ class PhysicsInformedWrapper(nn.Module):
             nn.Linear(32, 1),  # 예측된 열화율(decay rate) 반환
         )
 
+        # [추가] Adaptive Weighting을 위한 학습 가능한 파라미터 (Log Variance)
+        # IEEE 논문의 수식 (22)에 기반하여 각 손실항의 가중치를 자동 조절
+        self.log_var_data = nn.Parameter(torch.zeros(1))
+        self.log_var_pde = nn.Parameter(torch.zeros(1))
+        self.log_var_mono = nn.Parameter(torch.zeros(1))
+
     def forward(self, x, t=None, mode=None, return_pde=False):
         """
         x: (B, D) or (B, L, D)
@@ -178,7 +199,7 @@ class PhysicsInformedWrapper(nn.Module):
         # 5. PDE Residual 계산: H = u_t - G(t, x, u, u_t, u_x)
         pde_residual = u_t - g_out
 
-        return u, pde_residual
+        return u, pde_residual, u_t
 
 
 # ==========================================
@@ -203,6 +224,20 @@ def get_gpr_model():
     )
 
 
+def get_xgboost_model(**kwargs):
+    try:
+        from xgboost import XGBRegressor
+        return XGBRegressor(random_state=42, n_jobs=-1, **kwargs)
+    except ImportError:
+        raise ImportError("xgboost is not installed. Please install it using 'pip install xgboost'.")
+
+def get_lightgbm_model(**kwargs):
+    try:
+        from lightgbm import LGBMRegressor
+        return LGBMRegressor(random_state=42, n_jobs=-1, **kwargs)
+    except ImportError:
+        raise ImportError("lightgbm is not installed. Please install it using 'pip install lightgbm'.")
+
 # ==========================================
 # 4. Model Factory
 # ==========================================
@@ -215,11 +250,11 @@ def get_model(model_name, use_pi=False, feature_dim=40, **kwargs):
     actual_input_dim = feature_dim + 1 if use_pi else feature_dim
 
     # --- Deep Learning Models ---
-    if model_name in ["ITRANSFORMER", "LSTM", "MLP"]:
+    if model_name in ["ITRANSFORMER", "TABNET", "MLP"]:
         if model_name == "ITRANSFORMER":
             base_model = InvertedTransformer(num_variates=actual_input_dim, **kwargs)
-        elif model_name == "LSTM":
-            base_model = VanillaLSTM(input_dim=actual_input_dim, **kwargs)
+        elif model_name == "TABNET":
+            base_model = TabularAttentionNet(input_dim=actual_input_dim, **kwargs)
         elif model_name == "MLP":
             base_model = SimpleMLP(input_dim=actual_input_dim, **kwargs)
 
@@ -230,7 +265,7 @@ def get_model(model_name, use_pi=False, feature_dim=40, **kwargs):
             return base_model
 
     # --- Machine Learning Models ---
-    elif model_name in ["RF", "SVR", "GPR"]:
+    elif model_name in ["RF", "SVR", "GPR", "XGBOOST", "LIGHTGBM"]:
         if use_pi:
             print(
                 "Warning: Machine Learning 모델은 미분(Autograd)이 불가능하여 PI 모듈을 사용할 수 없습니다. 일반 모델을 반환합니다."
@@ -242,6 +277,10 @@ def get_model(model_name, use_pi=False, feature_dim=40, **kwargs):
             return get_svr_model()
         elif model_name == "GPR":
             return get_gpr_model()
+        elif model_name == "XGBOOST":
+            return get_xgboost_model(**kwargs)
+        elif model_name == "LIGHTGBM":
+            return get_lightgbm_model(**kwargs)
 
     else:
         raise ValueError(f"Model '{model_name}' is not supported.")
