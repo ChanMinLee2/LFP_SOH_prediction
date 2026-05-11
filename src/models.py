@@ -4,31 +4,32 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, WhiteKernel
+from xgboost import XGBRegressor
+from lightgbm import LGBMRegressor
 
 # ==========================================
 # 1. 딥러닝 모델 (PyTorch 기반)
 # ==========================================
 
+
 class TabularAttentionNet(nn.Module):
     """
-    정형 데이터(Tabular Data)의 특성을 고려하여, 
+    정형 데이터(Tabular Data)의 특성을 고려하여,
     각 Feature의 중요도를 스스로 학습하는 간소화된 Attention 기반 MLP (TabNet 영감)
     """
+
     def __init__(self, input_dim=40, output_dim=1, hidden_dim=64):
         super(TabularAttentionNet, self).__init__()
         self.feature_extractor = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.GELU(),
-            nn.Linear(hidden_dim, hidden_dim)
+            nn.Linear(hidden_dim, hidden_dim),
         )
         self.attention = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
-            nn.Softmax(dim=-1)
+            nn.Linear(input_dim, hidden_dim), nn.Softmax(dim=-1)
         )
         self.fc = nn.Sequential(
-            nn.Linear(hidden_dim, 32),
-            nn.GELU(),
-            nn.Linear(32, output_dim)
+            nn.Linear(hidden_dim, 32), nn.GELU(), nn.Linear(32, output_dim)
         )
 
     def forward(self, x):
@@ -36,6 +37,7 @@ class TabularAttentionNet(nn.Module):
         attn = self.attention(x)
         out = feat * attn  # Feature별 가중치 곱 (Sparse Attention 효과)
         return self.fc(out)
+
 
 class InvertedTransformer(nn.Module):
     def __init__(
@@ -131,16 +133,16 @@ class PhysicsInformedWrapper(nn.Module):
         if mode is not None:
             # x가 (B, D)인 경우와 (B, L, D)인 경우를 모두 처리
             mask = torch.ones_like(x)
-            
+
             # 충전 모드(1)인 경우: 방전 피처(15:30)를 0으로 마스킹
             # 방전 모드(0)인 경우: 충전 피처(0:15)를 0으로 마스킹
             for i in range(x.size(0)):
-                if mode[i] > 0.5: # Charge
+                if mode[i] > 0.5:  # Charge
                     if len(x.shape) == 3:
                         mask[i, :, 15:30] = 0
                     else:
                         mask[i, 15:30] = 0
-                else: # Discharge
+                else:  # Discharge
                     if len(x.shape) == 3:
                         mask[i, :, 0:15] = 0
                     else:
@@ -226,17 +228,21 @@ def get_gpr_model():
 
 def get_xgboost_model(**kwargs):
     try:
-        from xgboost import XGBRegressor
         return XGBRegressor(random_state=42, n_jobs=-1, **kwargs)
     except ImportError:
-        raise ImportError("xgboost is not installed. Please install it using 'pip install xgboost'.")
+        raise ImportError(
+            "xgboost is not installed. Please install it using 'pip install xgboost'."
+        )
+
 
 def get_lightgbm_model(**kwargs):
     try:
-        from lightgbm import LGBMRegressor
         return LGBMRegressor(random_state=42, n_jobs=-1, **kwargs)
     except ImportError:
-        raise ImportError("lightgbm is not installed. Please install it using 'pip install lightgbm'.")
+        raise ImportError(
+            "lightgbm is not installed. Please install it using 'pip install lightgbm'."
+        )
+
 
 # ==========================================
 # 4. Model Factory

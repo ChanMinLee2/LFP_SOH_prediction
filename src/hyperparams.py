@@ -4,14 +4,14 @@
 
 # 모델별 마이너 번호 매핑
 MODEL_MAP = {
-    "MLP": 1, 
-    "ITRANSFORMER": 2, 
-    "TABNET": 3, 
-    "XGBOOST": 4, 
-    "LIGHTGBM": 5, 
-    "RF": 6, 
-    "SVR": 7, 
-    "GPR": 8
+    "MLP": 1,
+    "ITRANSFORMER": 2,
+    "TABNET": 3,
+    "XGBOOST": 4,
+    "LIGHTGBM": 5,
+    "RF": 6,
+    "SVR": 7,
+    "GPR": 8,
 }
 
 HYPERPARAMS = {
@@ -20,7 +20,7 @@ HYPERPARAMS = {
     "patch_version": 1,  # Fixed for now
     "seed": 42,
     # 2. Data Options
-    "dataset_types": ["mit"],
+    "dataset_types": ["mit", "hust"],
     "processed_data_root": "D:/chanminLee/data_store/LFP_SOH_estimation",
     "val_ratio": 0.2,
     "test_ratio": 0.2,
@@ -47,7 +47,12 @@ HYPERPARAMS = {
     "itransformer_params": {"seq_len": 1, "d_model": 64, "n_heads": 4, "e_layers": 2},
     "tabnet_params": {"hidden_dim": 64},
     "xgboost_params": {"n_estimators": 200, "max_depth": 6, "learning_rate": 0.05},
-    "lightgbm_params": {"n_estimators": 200, "max_depth": -1, "num_leaves": 31, "learning_rate": 0.05},
+    "lightgbm_params": {
+        "n_estimators": 200,
+        "max_depth": -1,
+        "num_leaves": 31,
+        "learning_rate": 0.05,
+    },
     "rf_params": {"n_estimators": 200, "max_depth": 15},
     "svr_params": {"C": 100, "gamma": "scale", "kernel": "rbf"},
     "gpr_params": {"length_scale": 1.0, "noise_level": 1.0},

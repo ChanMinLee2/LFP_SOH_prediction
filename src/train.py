@@ -265,10 +265,10 @@ def train_epoch(model, dataloader, criterion, optimizer, config):
             loss_data = criterion(preds, y)
             loss_pde = torch.mean(pde_residual**2)
 
-            # [추가] Monotonicity Loss: 시간에 따른 용량 변화율(u_t)이 양수(용량 증가)인 부분에 강력한 페널티 부여
+            # Monotonicity Loss: 시간에 따른 용량 변화율(u_t)이 양수(용량 증가)인 부분에 강력한 페널티 부여
             loss_mono = torch.mean(torch.nn.functional.relu(u_t) ** 2)
 
-            # [추가/수정] Adaptive Weighting: 학습 가능한 파라미터(log_var_*)를 사용하여 각 손실 함수의 스케일을 자동 조절
+            # Adaptive Weighting: 학습 가능한 파라미터(log_var_*)를 사용하여 각 손실 함수의 스케일을 자동 조절
             # 참고: IEEE TIV 논문 식 (22)
             loss_data_w = (
                 torch.exp(-model.log_var_data) * loss_data + model.log_var_data
@@ -332,7 +332,7 @@ def train_epoch(model, dataloader, criterion, optimizer, config):
     if processed_samples == 0:
         return float("nan"), float("nan"), float("nan")
 
-    # [수정] 반환값 변경: Total Loss, Data Loss, PDE Loss
+    # 반환값 변경: Total Loss, Data Loss, PDE Loss
     return (
         running_loss / processed_samples,
         running_data_loss / processed_samples,
@@ -537,8 +537,8 @@ if __name__ == "__main__":
 
         model_name_upper = model_name.upper()
 
-        if model_name_upper in ["MLP", "ITRANSFORMER", "TABNET"]:
-            continue
+        # if model_name_upper in ["MLP", "ITRANSFORMER", "TABNET"]:
+        #     continue
         current_params = copy.deepcopy(HYPERPARAMS)
         current_params["model_name"] = model_name_upper
 
