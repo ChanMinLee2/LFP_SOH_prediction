@@ -1,0 +1,22 @@
+================================================================================
+ COMPREHENSIVE DATA ANALYSIS REPORT: HUST
+ Date: 2026-05-13
+================================================================================
+
+[Part A] Optimized Tensor Inspection
+1. Total Sample Count: 643,302
+2. Data Keys: ['cell', 'cyc', 'x', 'soc_label', 'mode_label', 'length_p', 'y', 'capacity']
+3. Feature Shape: (48,) -> CORRECT (48D)
+4. Sample Metadata: Cell=1-1, Cyc=2, Mode=Charge
+
+
+[Part B] Sliced Segment Statistics
+Mode_Name SOC_Scenario_Name  Count   Row_Mean  Time_Mean_s  Volt_Mean_V
+   Charge              High  87723  33.416367   161.413895     0.509712
+   Charge               Low  87723 184.555977   933.257385     0.222984
+   Charge               Mid 146205  34.032188   165.170517     0.038264
+Discharge              High  87723  46.047536   224.568588     0.190661
+Discharge               Low  87723  82.096999   402.160400     0.792578
+Discharge               Mid 146205  72.699347   355.885803     0.100273
+
+[Success] Visualization saved to: c:\Users\ksshin\Desktop\ChanminLee\LFP_SOH_prediction\outputs\figures\0513\hust_comprehensive_analysis.png

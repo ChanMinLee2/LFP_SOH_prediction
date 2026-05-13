@@ -16,11 +16,11 @@ MODEL_MAP = {
 
 HYPERPARAMS = {
     # 1. Experiment & Tracking
-    "major_version": 2,  # Parameter Set Index
+    "major_version": 4,  # Parameter Set Index
     "patch_version": 1,  # Fixed for now
     "seed": 42,
     # 2. Data Options
-    "dataset_types": ["mit", "hust"],
+    "dataset_types": ["mit", "hust"],  # List of datasets to use
     "processed_data_root": "D:/chanminLee/data_store/LFP_SOH_estimation",
     "val_ratio": 0.2,
     "test_ratio": 0.2,

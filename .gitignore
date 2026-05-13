@@ -12,6 +12,8 @@ HUST_data
 MIT_data
 
 *.pth
-/experiments/*/*.pkl
+
+/experiments/**/*.pkl
+/experiments/legacy
 
 ref/*.pdf

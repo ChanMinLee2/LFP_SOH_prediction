@@ -8,6 +8,7 @@ import seaborn as sns
 import numpy as np
 from src.hyperparams import HYPERPARAMS
 
+
 def parse_metrics_report(file_path):
     metrics = {}
     with open(file_path, "r", encoding="utf-8") as f:
@@ -34,7 +35,9 @@ def main():
     experiments_dir = project_root / "experiments"
 
     # 1. Read summary CSV (Optional, but user requested it)
-    summary_csv_path = experiments_dir / "summary_major_3.csv"
+    summary_csv_path = (
+        experiments_dir / f"summary_major_{HYPERPARAMS['major_version']}.csv"
+    )
     if summary_csv_path.exists():
         print(f"[Info] Reading summary CSV from {summary_csv_path}")
         summary_df = pd.read_csv(summary_csv_path)
@@ -45,7 +48,10 @@ def main():
 
     # 2. Gather metrics from evaluation text files
     search_pattern = str(
-        experiments_dir / f"{HYPERPARAMS['major_version']}.*.*" / "evaluation" / "*_metrics_report.txt"
+        experiments_dir
+        / f"{HYPERPARAMS['major_version']}.*.*"
+        / "evaluation"
+        / "*_metrics_report.txt"
     )
     report_files = glob.glob(search_pattern)
 

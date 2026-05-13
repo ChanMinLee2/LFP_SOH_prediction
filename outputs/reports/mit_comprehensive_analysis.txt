@@ -1,0 +1,22 @@
+================================================================================
+ COMPREHENSIVE DATA ANALYSIS REPORT: MIT
+ Date: 2026-05-13
+================================================================================
+
+[Part A] Optimized Tensor Inspection
+1. Total Sample Count: 503,535
+2. Data Keys: ['cell', 'cyc', 'x', 'soc_label', 'mode_label', 'length_p', 'y', 'capacity']
+3. Feature Shape: (48,) -> CORRECT (48D)
+4. Sample Metadata: Cell=b1c0, Cyc=2, Mode=Charge
+
+
+[Part B] Sliced Segment Statistics
+Mode_Name SOC_Scenario_Name  Count   Row_Mean  Time_Mean_s  Volt_Mean_V
+   Charge              High  68813 101.538459     2.737332     0.923604
+   Charge               Low  68767 230.461282    15.085638     0.185964
+   Charge               Mid 113615  51.397905     3.018041     0.057582
+Discharge              High  68823  69.521933     3.260739     0.312642
+Discharge               Low  68814 148.463568     6.413533     0.754046
+Discharge               Mid 114703  49.846246     3.295399     0.069074
+
+[Success] Visualization saved to: c:\Users\ksshin\Desktop\ChanminLee\LFP_SOH_prediction\outputs\figures\0512\mit_comprehensive_analysis.png
