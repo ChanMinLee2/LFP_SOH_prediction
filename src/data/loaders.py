@@ -82,7 +82,7 @@ def load_mit(data_dir: Path = MIT_DATA_DIR) -> Dict[str, MITCell]:
     b2_keys = ["b2c7", "b2c8", "b2c9", "b2c15", "b2c16"]
     b1_keys = ["b1c0", "b1c1", "b1c2", "b1c3", "b1c4"]
     if len(data_batches) >= 2:
-        for i, bk in enumerate(b1_keys):
+        for i, bk in tqdm(enumerate(b1_keys), desc="Merging Batches 1 & 2"):
             if bk in data_batches[0] and b2_keys[i] in data_batches[1]:
                 b1, b2 = data_batches[0][bk], data_batches[1][b2_keys[i]]
                 for k in b1["summary"]:
@@ -99,7 +99,7 @@ def load_mit(data_dir: Path = MIT_DATA_DIR) -> Dict[str, MITCell]:
                     {
                         str(int(k) + max_cyc): v
                         for k, v in b2["cycles"].items()
-                        if int(k) > 0
+                        # if int(k) > 0
                     }
                 )
                 # Re-calculate cycle life after merge
@@ -107,11 +107,12 @@ def load_mit(data_dir: Path = MIT_DATA_DIR) -> Dict[str, MITCell]:
                     b1["cycle_life"] = np.array([len(b1["summary"]["IR"])])
                 del data_batches[1][b2_keys[i]]
 
-    for i, batch_dict in enumerate(data_batches):
-        for cid, d in batch_dict.items():
+    for i, batch_dict in tqdm(enumerate(data_batches), desc="MIT Batches"):
+        for cid, data in batch_dict.items():
+
             # Robustly extract cycle_life
             try:
-                cl = d.get("cycle_life")
+                cl = data.get("cycle_life")
                 if cl is not None:
                     if hasattr(cl, "item"):
                         life = int(cl.item())
@@ -128,7 +129,7 @@ def load_mit(data_dir: Path = MIT_DATA_DIR) -> Dict[str, MITCell]:
 
             # Clean summary dictionary
             summary_clean = {}
-            for k, v in d.get("summary", {}).items():
+            for k, v in data.get("summary", {}).items():
                 if isinstance(v, (list, np.ndarray)):
                     summary_clean[k] = np.array(v)
                 else:
@@ -136,7 +137,7 @@ def load_mit(data_dir: Path = MIT_DATA_DIR) -> Dict[str, MITCell]:
 
             # Clean cycles dictionary with safe array conversion
             cycles_clean = {}
-            for k, v in d.get("cycles", {}).items():
+            for k, v in data.get("cycles", {}).items():
                 if isinstance(v, dict):
                     cycles_clean[str(k)] = {
                         ik: np.array(iv) if isinstance(iv, (list, np.ndarray)) else iv
@@ -148,7 +149,7 @@ def load_mit(data_dir: Path = MIT_DATA_DIR) -> Dict[str, MITCell]:
             all_cells[cid] = MITCell(
                 cid,
                 f"b{i+1}",
-                d.get("charge_policy", "unknown"),
+                data.get("charge_policy", "unknown"),
                 life,
                 summary_clean,
                 cycles_clean,

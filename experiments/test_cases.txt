@@ -1,8 +1,8 @@
-# case 1
+# case 2
 only mit, 8 models, 48D(45D + 3 labels), PI on, t/2500 norm, lr 0.0005, seed 42
 
-# case 2
+# case 3
 only hust, 다른건 동일
 
-# case 3
+# case 4
 mit + hust, 다른건 동일

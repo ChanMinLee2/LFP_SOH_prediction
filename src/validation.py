@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from tqdm import tqdm
+
 try:
     from thop import profile
 except ImportError:
@@ -37,7 +38,9 @@ from src.hyperparams import HYPERPARAMS, MODEL_MAP
 def evaluate_model(model, test_loader, config, is_dl=True):
     results = {"targets": [], "preds": [], "time": [], "cell_id": [], "scenario": []}
     total_inference_time = 0.0
-    print(f"[Info] Starting Inference on Test Set ({len(test_loader.dataset)} samples)...")
+    print(
+        f"[Info] Starting Inference on Test Set ({len(test_loader.dataset)} samples)..."
+    )
 
     if is_dl:
         model.eval()
@@ -102,7 +105,7 @@ def evaluate_model(model, test_loader, config, is_dl=True):
 def calculate_and_plot_metrics(df_results, model, config, avg_inf_time_ms, is_dl=True):
     save_dir = config.exp_dir / "evaluation"
     save_dir.mkdir(parents=True, exist_ok=True)
-    
+
     targets = df_results["targets"].values
     preds = df_results["preds"].values
 
@@ -136,7 +139,7 @@ def calculate_and_plot_metrics(df_results, model, config, avg_inf_time_ms, is_dl
 
     # [D] Inference Time & Complexity
     metrics["9. Inference Time (ms/sample)"] = avg_inf_time_ms
-    
+
     if is_dl:
         metrics["10. Parameter Count"] = sum(p.numel() for p in model.parameters())
         if profile is not None:
@@ -144,12 +147,24 @@ def calculate_and_plot_metrics(df_results, model, config, avg_inf_time_ms, is_dl
                 dummy_x = torch.randn(1, config.input_dim).to(config.device)
                 if getattr(config, "add_seq_dim", False):
                     dummy_x = dummy_x.unsqueeze(1)
-                
+
                 if config.use_pi:
-                    macs, _ = profile(model, inputs=(dummy_x, torch.randn(1, 1).to(config.device), torch.randn(1, 1).to(config.device)), verbose=False)
+                    macs, _ = profile(
+                        model,
+                        inputs=(
+                            dummy_x,
+                            torch.randn(1, 1).to(config.device),
+                            torch.randn(1, 1).to(config.device),
+                        ),
+                        verbose=False,
+                    )
                 else:
                     if isinstance(model, PhysicsInformedWrapper):
-                        macs, _ = profile(model, inputs=(dummy_x, None, torch.randn(1, 1).to(config.device)), verbose=False)
+                        macs, _ = profile(
+                            model,
+                            inputs=(dummy_x, None, torch.randn(1, 1).to(config.device)),
+                            verbose=False,
+                        )
                     else:
                         macs, _ = profile(model, inputs=(dummy_x,), verbose=False)
                 metrics["11. FLOPs"] = macs * 2
@@ -181,7 +196,9 @@ def calculate_and_plot_metrics(df_results, model, config, avg_inf_time_ms, is_dl
     sns.set_theme(style="whitegrid")
     fig1, axes1 = plt.subplots(1, 2, figsize=(16, 6))
     sns.scatterplot(x=targets, y=preds, alpha=0.3, ax=axes1[0], color="#1f77b4")
-    axes1[0].plot([targets.min(), targets.max()], [targets.min(), targets.max()], "r--", lw=2)
+    axes1[0].plot(
+        [targets.min(), targets.max()], [targets.min(), targets.max()], "r--", lw=2
+    )
     axes1[0].set_title(f"Actual vs Predicted (RMSE: {metrics['2. RMSE (%)']:.4f})")
     axes1[0].set_xlabel("Actual SOH")
     axes1[0].set_ylabel("Predicted SOH")
@@ -201,8 +218,18 @@ def calculate_and_plot_metrics(df_results, model, config, avg_inf_time_ms, is_dl
 # 3. Main Execution
 # ==========================================
 if __name__ == "__main__":
-    MODELS_TO_EVALUATE = ["MLP", "TABNET", "ITRANSFORMER", "XGBOOST", "LIGHTGBM", "RF", "SVR", "GPR"]
-    
+    MODELS_TO_EVALUATE = [
+        "MLP",
+        "TABNET",
+        "ITRANSFORMER",
+        "XGBOOST",
+        "LIGHTGBM",
+        "RF",
+        "SVR",
+        "GPR",
+    ]
+    # MODELS_TO_EVALUATE = ["MLP", "TABNET", "ITRANSFORMER", "XGBOOST", "LIGHTGBM", "RF"]
+
     seed_everything(HYPERPARAMS["seed"])
     base_config = ConfigNamespace(HYPERPARAMS)
     base_config.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -213,9 +240,9 @@ if __name__ == "__main__":
 
     for model_name in MODELS_TO_EVALUATE:
         model_name_upper = model_name.upper()
-        print(f"\n" + "="*50)
+        print(f"\n" + "=" * 50)
         print(f"Evaluating Model: {model_name_upper}")
-        print("="*50)
+        print("=" * 50)
 
         current_params = copy.deepcopy(HYPERPARAMS)
         current_params["model_name"] = model_name_upper
@@ -224,10 +251,10 @@ if __name__ == "__main__":
 
         cfg = ConfigNamespace(current_params)
         cfg.device = base_config.device
-        
+
         # 모델의 버전에 맞는 디렉토리 설정
         exp_dir = cfg.setup_experiment_dir()
-        
+
         # DL 모델 로드
         if is_dl:
             specific_params = getattr(cfg, f"{model_name.lower()}_params", {})
@@ -238,28 +265,38 @@ if __name__ == "__main__":
                 output_dim=cfg.output_dim,
                 **specific_params,
             )
-            
+
             if not cfg.checkpoint_path.exists():
-                print(f"[Warning] Checkpoint not found: {cfg.checkpoint_path}. Skipping.")
+                print(
+                    f"[Warning] Checkpoint not found: {cfg.checkpoint_path}. Skipping."
+                )
                 continue
-                
+
             print(f"[Info] Loading weights from: {cfg.checkpoint_path}")
-            model.load_state_dict(torch.load(cfg.checkpoint_path, map_location=cfg.device))
+            model.load_state_dict(
+                torch.load(cfg.checkpoint_path, map_location=cfg.device)
+            )
             model = model.to(cfg.device)
-            
-            df_results, avg_inf_time = evaluate_model(model, test_loader, cfg, is_dl=True)
+
+            df_results, avg_inf_time = evaluate_model(
+                model, test_loader, cfg, is_dl=True
+            )
             calculate_and_plot_metrics(df_results, model, cfg, avg_inf_time, is_dl=True)
-            
+
         # ML 모델 로드
         else:
             model_path = cfg.checkpoint_path.with_suffix(".pkl")
             if not model_path.exists():
                 print(f"[Warning] ML Model not found: {model_path}. Skipping.")
                 continue
-                
+
             print(f"[Info] Loading model from: {model_path}")
             with open(model_path, "rb") as f:
                 model = pickle.load(f)
-                
-            df_results, avg_inf_time = evaluate_model(model, test_loader, cfg, is_dl=False)
-            calculate_and_plot_metrics(df_results, model, cfg, avg_inf_time, is_dl=False)
+
+            df_results, avg_inf_time = evaluate_model(
+                model, test_loader, cfg, is_dl=False
+            )
+            calculate_and_plot_metrics(
+                df_results, model, cfg, avg_inf_time, is_dl=False
+            )

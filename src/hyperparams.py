@@ -16,7 +16,7 @@ MODEL_MAP = {
 
 HYPERPARAMS = {
     # 1. Experiment & Tracking
-    "major_version": 4,  # Parameter Set Index
+    "major_version": 5,  # Parameter Set Index
     "patch_version": 1,  # Fixed for now
     "seed": 42,
     # 2. Data Options
