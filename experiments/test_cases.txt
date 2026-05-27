@@ -6,3 +6,16 @@ only hust, 다른건 동일
 
 # case 4
 mit + hust, 다른건 동일
+
+# case 5 (전처리만)
+mit 
+
+# case 6
+mit + 2.5% outlier removal 적용, 다른건 동일
+
+# case 7 (전처리만) 
+mit, cycle_step = 1 적용
+
+# case 8 
+mit + 2.5% outlier removal 적용, cycle_step=1, 다른건 동일
+

@@ -17,3 +17,4 @@ MIT_data
 /experiments/legacy
 
 ref/*.pdf
+outputs/figures/*

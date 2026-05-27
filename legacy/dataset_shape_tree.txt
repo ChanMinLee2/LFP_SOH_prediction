@@ -1,0 +1,78 @@
+=== MIT & HUST Dataset Hierarchical Shape Tree ===
+
+--- MIT DATASET STRUCTURE ---
+MIT_Batch1 (dict) [Keys: 1]
+    └── b1c0 (dict) [Keys: 4]
+        └── cycle_life (ndarray) [Shape: (1, 1), Dtype: float64]
+        └── charge_policy (str)
+        └── summary (dict) [Keys: 8]
+            └── IR (ndarray) [Shape: (1189,), Dtype: float64]
+            └── QC (ndarray) [Shape: (1189,), Dtype: float64]
+            └── QD (ndarray) [Shape: (1189,), Dtype: float64]
+            └── Tavg (ndarray) [Shape: (1189,), Dtype: float64]
+            └── Tmin (ndarray) [Shape: (1189,), Dtype: float64]
+            ... and 3 more keys
+        └── cycles (dict) [Keys: 1189]
+            └── 0 (dict) [Keys: 9]
+                └── I (ndarray) [Shape: (2,), Dtype: uint64]
+                └── Qc (ndarray) [Shape: (2,), Dtype: uint64]
+                └── Qd (ndarray) [Shape: (2,), Dtype: uint64]
+                └── Qdlin (ndarray) [Shape: (2,), Dtype: uint64]
+                └── T (ndarray) [Shape: (2,), Dtype: uint64]
+                ... and 4 more keys
+            └── 1 (dict) [Keys: 9]
+                └── I (ndarray) [Shape: (1087,), Dtype: float64]
+                └── Qc (ndarray) [Shape: (1087,), Dtype: float64]
+                └── Qd (ndarray) [Shape: (1087,), Dtype: float64]
+                └── Qdlin (ndarray) [Shape: (1000,), Dtype: float64]
+                └── T (ndarray) [Shape: (1087,), Dtype: float64]
+                ... and 4 more keys
+            └── 2 (dict) [Keys: 9]
+                └── I (ndarray) [Shape: (1117,), Dtype: float64]
+                └── Qc (ndarray) [Shape: (1117,), Dtype: float64]
+                └── Qd (ndarray) [Shape: (1117,), Dtype: float64]
+                └── Qdlin (ndarray) [Shape: (1000,), Dtype: float64]
+                └── T (ndarray) [Shape: (1117,), Dtype: float64]
+                ... and 4 more keys
+            └── 3 (dict) [Keys: 9]
+                └── I (ndarray) [Shape: (1114,), Dtype: float64]
+                └── Qc (ndarray) [Shape: (1114,), Dtype: float64]
+                └── Qd (ndarray) [Shape: (1114,), Dtype: float64]
+                └── Qdlin (ndarray) [Shape: (1000,), Dtype: float64]
+                └── T (ndarray) [Shape: (1114,), Dtype: float64]
+                ... and 4 more keys
+            └── 4 (dict) [Keys: 9]
+                └── I (ndarray) [Shape: (1138,), Dtype: float64]
+                └── Qc (ndarray) [Shape: (1138,), Dtype: float64]
+                └── Qd (ndarray) [Shape: (1138,), Dtype: float64]
+                └── Qdlin (ndarray) [Shape: (1000,), Dtype: float64]
+                └── T (ndarray) [Shape: (1138,), Dtype: float64]
+                ... and 4 more keys
+            ... and 1184 more keys
+
+============================================================
+
+--- HUST DATASET STRUCTURE ---
+HUST_1-1 (dict) [Keys: 1]
+    └── 1-1 (dict) [Keys: 3]
+        └── rul (dict) [Keys: 1504]
+            └── 1 (int64)
+            └── 2 (int64)
+            └── 3 (int64)
+            └── 4 (int64)
+            └── 5 (int64)
+            ... and 1499 more keys
+        └── dq (dict) [Keys: 1504]
+            └── 1 (float64)
+            └── 2 (float64)
+            └── 3 (float64)
+            └── 4 (float64)
+            └── 5 (float64)
+            ... and 1499 more keys
+        └── data (dict) [Keys: 1504]
+            └── 1 (DataFrame) [Shape: (836, 6), Columns: ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)']]
+            └── 2 (DataFrame) [Shape: (822, 6), Columns: ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)']]
+            └── 3 (DataFrame) [Shape: (822, 6), Columns: ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)']]
+            └── 4 (DataFrame) [Shape: (822, 6), Columns: ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)']]
+            └── 5 (DataFrame) [Shape: (822, 6), Columns: ['Status', 'Cycle number', 'Current (mA)', 'Voltage (V)', 'Capacity (mAh)', 'Time (s)']]
+            ... and 1499 more keys

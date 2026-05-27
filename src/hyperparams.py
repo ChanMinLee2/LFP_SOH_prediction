@@ -15,12 +15,16 @@ MODEL_MAP = {
 }
 
 HYPERPARAMS = {
+    # 0. preprocess
+    "do_remove": True,  # removal_index.csv에 있는 사이클을 제거할지 여부
+    "cycle_step": 1,  # 몇 사이클마다 데이터를 사용할지 (예: 5면 0,5,10,...)
+    "step": 0.1,  # SOC 시나리오 내에서 슬라이딩 윈도우 간격
     # 1. Experiment & Tracking
-    "major_version": 5,  # Parameter Set Index
+    "major_version": 8,  # Parameter Set Index
     "patch_version": 1,  # Fixed for now
     "seed": 42,
     # 2. Data Options
-    "dataset_types": ["mit", "hust"],  # List of datasets to use
+    "dataset_types": ["mit"],  # List of datasets to use
     "processed_data_root": "D:/chanminLee/data_store/LFP_SOH_estimation",
     "val_ratio": 0.2,
     "test_ratio": 0.2,

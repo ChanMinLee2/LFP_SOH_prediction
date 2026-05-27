@@ -95,9 +95,14 @@ class BatterySOHDataset(Dataset):
         y_raw = np.nan_to_num(y_raw, nan=0.0)
         t_raw = np.nan_to_num(t_raw, nan=0.0)
 
-        # t_raw 정규화 (거의 0~1 범위로)
-        self.t_max = 2500.0
-        t_norm = t_raw / self.t_max
+        # t_raw 정규화 (z-scale 적용)
+        t_mean = t_raw.mean()
+        t_std = t_raw.std() if t_raw.std() > 0 else 1.0
+        t_norm = (t_raw - t_mean) / t_std
+
+        # [추가] t_min-max 정규화 (0~1 스케일)
+        # self.t_max = 2500.0
+        # t_norm = t_raw / self.t_max
 
         self.x = torch.tensor(x_raw, dtype=torch.float32)
         self.t = torch.tensor(t_norm, dtype=torch.float32).unsqueeze(-1)
