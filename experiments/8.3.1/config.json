@@ -1,0 +1,72 @@
+{
+    "do_remove": true,
+    "cycle_step": 1,
+    "step": 0.1,
+    "major_version": 8,
+    "patch_version": 1,
+    "seed": 42,
+    "dataset_types": [
+        "mit"
+    ],
+    "processed_data_root": "D:/chanminLee/data_store/LFP_SOH_estimation",
+    "val_ratio": 0.2,
+    "test_ratio": 0.2,
+    "input_dim": 48,
+    "target_col": "capacity",
+    "add_seq_dim": false,
+    "model_name": "TABNET",
+    "output_dim": 1,
+    "use_pi": true,
+    "pi_target_idx": 0,
+    "alpha": 100.0,
+    "beta": 0.1,
+    "batch_size": 512,
+    "epochs": 300,
+    "learning_rate": 0.0005,
+    "weight_decay": 0.0001,
+    "patience": 8,
+    "factor": 0.5,
+    "min_lr": 1e-07,
+    "mlp_params": {
+        "hidden_dims": [
+            128,
+            64
+        ],
+        "dropout": 0.2
+    },
+    "itransformer_params": {
+        "seq_len": 1,
+        "d_model": 64,
+        "n_heads": 4,
+        "e_layers": 2
+    },
+    "tabnet_params": {
+        "hidden_dim": 64
+    },
+    "xgboost_params": {
+        "n_estimators": 200,
+        "max_depth": 6,
+        "learning_rate": 0.05
+    },
+    "lightgbm_params": {
+        "n_estimators": 200,
+        "max_depth": -1,
+        "num_leaves": 31,
+        "learning_rate": 0.05
+    },
+    "rf_params": {
+        "n_estimators": 200,
+        "max_depth": 15
+    },
+    "svr_params": {
+        "C": 100,
+        "gamma": "scale",
+        "kernel": "rbf"
+    },
+    "gpr_params": {
+        "length_scale": 1.0,
+        "noise_level": 1.0
+    },
+    "device": "cuda",
+    "exp_dir": "C:\\Users\\ksshin\\Desktop\\ChanminLee\\LFP_SOH_prediction\\experiments\\8.3.1"
+}

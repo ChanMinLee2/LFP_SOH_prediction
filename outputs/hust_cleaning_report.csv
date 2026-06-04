@@ -1,2 +1,1 @@
-cell_id,cycle,feature,outlier_removed,interpolated_count,"outlier_details_(idx,val)",nan_indices,outlier_details
-1-8,168,Capacity_Consistency,True,,,,"RelErr:1918.10%,SumQ:1.177,IntQ:23.753"
+cell_id,cycle,feature,outlier_removed,interpolated_count,"outlier_details_(idx,val)",nan_indices

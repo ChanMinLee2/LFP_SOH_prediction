@@ -36,6 +36,7 @@ HYPERPARAMS = {
     "output_dim": 1,
     # 4. Physics-Informed (PI) Options
     "use_pi": True,
+    "pi_target_idx": 0,  # [추가] PINN 편미분에 사용할 타겟 HI 피처의 인덱스 (예: 0번은 mean_v)
     "alpha": 100.0,
     "beta": 0.1,
     # 5. Deep Learning Training Parameters

@@ -1,0 +1,311 @@
+
+==========================================================================================
+                     HI Mathematical Validation Report (By Scenario)                      
+==========================================================================================
+
+▶ Scenario: [Charge_High] (N=225007 segments)
+Feature Name         | Expected   | Actual Corr  | Validation Match
+--------------------------------------------------------------------------------
+c1_1_mean_v          | +          |    +0.0351   | ⚠️ OK, Weak corr
+c1_2_var_v           | -          |    -0.0328   | ⚠️ OK, Weak corr
+c1_3_skew_v          | -          |    -0.0390   | ⚠️ OK, Weak corr
+c1_4_kurt_v          | -          |    +0.0630   | ❌ Contradicts Theory
+c1_5_mean_t          | -          |    -0.0562   | ⚠️ OK, Weak corr
+c1_6_delta_t         | -          |    +0.0434   | ❌ Contradicts Theory
+c1_7_dtdt            | -          |    +0.1027   | ❌ Contradicts Theory
+c1_8_mean_i          | +          |    +0.2023   | ⚠️ OK, Weak corr
+c1_9_var_i           | -          |    +0.0730   | ❌ Contradicts Theory
+c1_10_ent_v          | -          |    -0.0065   | ⚠️ OK, Weak corr
+c1_11_ent_t          | -          |    +0.0270   | ❌ Contradicts Theory
+c1_12_corr_vi        | +          |    -0.0080   | ❌ Contradicts Theory
+c1_13_corr_vt        | +          |    +0.1133   | ⚠️ OK, Weak corr
+c1_14_de_dq          | +          |    +0.0339   | ⚠️ OK, Weak corr
+c1_15_power_var      | -          |    +0.0704   | ❌ Contradicts Theory
+c2_dis_1             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_2             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_3             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_4             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_5             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_6             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_7             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_8             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_9             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_10            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_11            | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_12            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_13            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_14            | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_15            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_1             | +          |    +0.1486   | ⚠️ OK, Weak corr
+c3_cha_2             | +          |    +0.0000   | ⚠️ OK, Weak corr
+c3_cha_3             | -          |    -0.0192   | ⚠️ OK, Weak corr
+c3_cha_4             | -          |    +0.0000   | ❌ Contradicts Theory
+c3_cha_5             | +          |    +0.1682   | ⚠️ OK, Weak corr
+c3_cha_6             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_7             | +          |    -0.0152   | ❌ Contradicts Theory
+c3_cha_8             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_9             | -          |    +0.0334   | ❌ Contradicts Theory
+c3_cha_10            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_11            | +          |    +0.0244   | ⚠️ OK, Weak corr
+c3_cha_12            | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_13            | +          |    +0.0164   | ⚠️ OK, Weak corr
+c3_cha_14            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_15            | -          |    +0.0321   | ❌ Contradicts Theory
+
+▶ Scenario: [Charge_Low] (N=225014 segments)
+Feature Name         | Expected   | Actual Corr  | Validation Match
+--------------------------------------------------------------------------------
+c1_1_mean_v          | +          |    -0.5343   | ❌ Contradicts Theory
+c1_2_var_v           | -          |    +0.5491   | ❌ Contradicts Theory
+c1_3_skew_v          | -          |    +0.5337   | ❌ Contradicts Theory
+c1_4_kurt_v          | -          |    -0.2943   | ⚠️ OK, Weak corr
+c1_5_mean_t          | -          |    -0.1610   | ⚠️ OK, Weak corr
+c1_6_delta_t         | -          |    +0.1124   | ❌ Contradicts Theory
+c1_7_dtdt            | -          |    -0.1217   | ⚠️ OK, Weak corr
+c1_8_mean_i          | +          |    -0.3162   | ❌ Contradicts Theory
+c1_9_var_i           | -          |    -0.1622   | ⚠️ OK, Weak corr
+c1_10_ent_v          | -          |    +0.1093   | ❌ Contradicts Theory
+c1_11_ent_t          | -          |    +0.2139   | ❌ Contradicts Theory
+c1_12_corr_vi        | +          |    -0.0305   | ❌ Contradicts Theory
+c1_13_corr_vt        | +          |    -0.0672   | ❌ Contradicts Theory
+c1_14_de_dq          | +          |    -0.8083   | ❌ Contradicts Theory
+c1_15_power_var      | -          |    -0.1662   | ⚠️ OK, Weak corr
+c2_dis_1             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_2             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_3             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_4             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_5             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_6             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_7             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_8             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_9             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_10            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_11            | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_12            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_13            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_14            | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_15            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_1             | +          |    +0.0812   | ⚠️ OK, Weak corr
+c3_cha_2             | +          |    -0.0000   | ❌ Contradicts Theory
+c3_cha_3             | -          |    +0.4869   | ❌ Contradicts Theory
+c3_cha_4             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_5             | +          |    -0.1105   | ❌ Contradicts Theory
+c3_cha_6             | -          |    +0.0000   | ❌ Contradicts Theory
+c3_cha_7             | +          |    -0.0493   | ❌ Contradicts Theory
+c3_cha_8             | -          |    +0.0000   | ❌ Contradicts Theory
+c3_cha_9             | -          |    -0.0648   | ⚠️ OK, Weak corr
+c3_cha_10            | +          |    -0.0000   | ❌ Contradicts Theory
+c3_cha_11            | +          |    +0.0870   | ⚠️ OK, Weak corr
+c3_cha_12            | -          |    +0.0000   | ❌ Contradicts Theory
+c3_cha_13            | +          |    +0.0328   | ⚠️ OK, Weak corr
+c3_cha_14            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_15            | -          |    -0.1656   | ⚠️ OK, Weak corr
+
+▶ Scenario: [Charge_Mid] (N=374010 segments)
+Feature Name         | Expected   | Actual Corr  | Validation Match
+--------------------------------------------------------------------------------
+c1_1_mean_v          | +          |    -0.1510   | ❌ Contradicts Theory
+c1_2_var_v           | -          |    -0.0286   | ⚠️ OK, Weak corr
+c1_3_skew_v          | -          |    +0.0465   | ❌ Contradicts Theory
+c1_4_kurt_v          | -          |    +0.1015   | ❌ Contradicts Theory
+c1_5_mean_t          | -          |    +0.0076   | ❌ Contradicts Theory
+c1_6_delta_t         | -          |    +0.0336   | ❌ Contradicts Theory
+c1_7_dtdt            | -          |    +0.0318   | ❌ Contradicts Theory
+c1_8_mean_i          | +          |    +0.0197   | ⚠️ OK, Weak corr
+c1_9_var_i           | -          |    +0.0528   | ❌ Contradicts Theory
+c1_10_ent_v          | -          |    +0.0134   | ❌ Contradicts Theory
+c1_11_ent_t          | -          |    +0.0308   | ❌ Contradicts Theory
+c1_12_corr_vi        | +          |    +0.0897   | ⚠️ OK, Weak corr
+c1_13_corr_vt        | +          |    -0.0643   | ❌ Contradicts Theory
+c1_14_de_dq          | +          |    -0.1477   | ❌ Contradicts Theory
+c1_15_power_var      | -          |    +0.0502   | ❌ Contradicts Theory
+c2_dis_1             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_2             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_3             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_4             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_5             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_6             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_7             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_8             | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_9             | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_10            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_11            | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_12            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_13            | -          |       +nan   | ❌ Failed (NaN)
+c2_dis_14            | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_15            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_1             | +          |    +0.1340   | ⚠️ OK, Weak corr
+c3_cha_2             | +          |    -0.0000   | ❌ Contradicts Theory
+c3_cha_3             | -          |    +0.0393   | ❌ Contradicts Theory
+c3_cha_4             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_5             | +          |    -0.0310   | ❌ Contradicts Theory
+c3_cha_6             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_7             | +          |    +0.0217   | ⚠️ OK, Weak corr
+c3_cha_8             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_9             | -          |    +0.0084   | ❌ Contradicts Theory
+c3_cha_10            | +          |    +0.0000   | ⚠️ OK, Weak corr
+c3_cha_11            | +          |    -0.0083   | ❌ Contradicts Theory
+c3_cha_12            | -          |    -0.0000   | ⚠️ OK, Weak corr
+c3_cha_13            | +          |    +0.0169   | ⚠️ OK, Weak corr
+c3_cha_14            | -          |    +0.0000   | ❌ Contradicts Theory
+c3_cha_15            | -          |    -0.0946   | ⚠️ OK, Weak corr
+
+▶ Scenario: [Discharge_High] (N=225015 segments)
+Feature Name         | Expected   | Actual Corr  | Validation Match
+--------------------------------------------------------------------------------
+c1_1_mean_v          | +          |    +0.0248   | ⚠️ OK, Weak corr
+c1_2_var_v           | -          |    -0.0501   | ⚠️ OK, Weak corr
+c1_3_skew_v          | -          |    +0.0639   | ❌ Contradicts Theory
+c1_4_kurt_v          | -          |    +0.1445   | ❌ Contradicts Theory
+c1_5_mean_t          | -          |    -0.0517   | ⚠️ OK, Weak corr
+c1_6_delta_t         | -          |    +0.0851   | ❌ Contradicts Theory
+c1_7_dtdt            | -          |    +0.0867   | ❌ Contradicts Theory
+c1_8_mean_i          | +          |    +0.0402   | ⚠️ OK, Weak corr
+c1_9_var_i           | -          |    -0.0360   | ⚠️ OK, Weak corr
+c1_10_ent_v          | -          |    -0.0396   | ⚠️ OK, Weak corr
+c1_11_ent_t          | -          |    +0.0497   | ❌ Contradicts Theory
+c1_12_corr_vi        | +          |    -0.0025   | ❌ Contradicts Theory
+c1_13_corr_vt        | +          |    -0.0842   | ❌ Contradicts Theory
+c1_14_de_dq          | +          |    +0.2045   | ⚠️ OK, Weak corr
+c1_15_power_var      | -          |    -0.0357   | ⚠️ OK, Weak corr
+c2_dis_1             | +          |    +0.0271   | ⚠️ OK, Weak corr
+c2_dis_2             | +          |    -0.0000   | ❌ Contradicts Theory
+c2_dis_3             | -          |    +0.0020   | ❌ Contradicts Theory
+c2_dis_4             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c2_dis_5             | +          |    -0.0018   | ❌ Contradicts Theory
+c2_dis_6             | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_7             | +          |    +0.0306   | ⚠️ OK, Weak corr
+c2_dis_8             | +          |    +0.0000   | ⚠️ OK, Weak corr
+c2_dis_9             | -          |    +0.0011   | ❌ Contradicts Theory
+c2_dis_10            | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_11            | +          |    +0.1491   | ⚠️ OK, Weak corr
+c2_dis_12            | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_13            | -          |    +0.1445   | ❌ Contradicts Theory
+c2_dis_14            | +          |    +0.0000   | ⚠️ OK, Weak corr
+c2_dis_15            | -          |    +0.0391   | ❌ Contradicts Theory
+c3_cha_1             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_2             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_3             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_4             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_5             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_6             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_7             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_8             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_9             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_10            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_11            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_12            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_13            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_14            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_15            | -          |       +nan   | ❌ Failed (NaN)
+
+▶ Scenario: [Discharge_Low] (N=225015 segments)
+Feature Name         | Expected   | Actual Corr  | Validation Match
+--------------------------------------------------------------------------------
+c1_1_mean_v          | +          |    +0.0965   | ⚠️ OK, Weak corr
+c1_2_var_v           | -          |    +0.0779   | ❌ Contradicts Theory
+c1_3_skew_v          | -          |    -0.1468   | ⚠️ OK, Weak corr
+c1_4_kurt_v          | -          |    -0.1711   | ⚠️ OK, Weak corr
+c1_5_mean_t          | -          |    -0.0490   | ⚠️ OK, Weak corr
+c1_6_delta_t         | -          |    -0.1151   | ⚠️ OK, Weak corr
+c1_7_dtdt            | -          |    +0.0534   | ❌ Contradicts Theory
+c1_8_mean_i          | +          |    +0.0371   | ⚠️ OK, Weak corr
+c1_9_var_i           | -          |    +0.0230   | ❌ Contradicts Theory
+c1_10_ent_v          | -          |    -0.1474   | ⚠️ OK, Weak corr
+c1_11_ent_t          | -          |    +0.0129   | ❌ Contradicts Theory
+c1_12_corr_vi        | +          |    +0.0013   | ⚠️ OK, Weak corr
+c1_13_corr_vt        | +          |    -0.0019   | ❌ Contradicts Theory
+c1_14_de_dq          | +          |    +0.2622   | ⚠️ OK, Weak corr
+c1_15_power_var      | -          |    +0.0422   | ❌ Contradicts Theory
+c2_dis_1             | +          |    +0.0009   | ⚠️ OK, Weak corr
+c2_dis_2             | +          |    -0.0000   | ❌ Contradicts Theory
+c2_dis_3             | -          |    +0.0065   | ❌ Contradicts Theory
+c2_dis_4             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c2_dis_5             | +          |    -0.0055   | ❌ Contradicts Theory
+c2_dis_6             | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_7             | +          |    -0.0354   | ❌ Contradicts Theory
+c2_dis_8             | +          |    +0.0000   | ⚠️ OK, Weak corr
+c2_dis_9             | -          |    +0.0151   | ❌ Contradicts Theory
+c2_dis_10            | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_11            | +          |    +0.1983   | ⚠️ OK, Weak corr
+c2_dis_12            | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_13            | -          |    +0.1261   | ❌ Contradicts Theory
+c2_dis_14            | +          |    +0.0000   | ⚠️ OK, Weak corr
+c2_dis_15            | -          |    -0.0612   | ⚠️ OK, Weak corr
+c3_cha_1             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_2             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_3             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_4             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_5             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_6             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_7             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_8             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_9             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_10            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_11            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_12            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_13            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_14            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_15            | -          |       +nan   | ❌ Failed (NaN)
+
+▶ Scenario: [Discharge_Mid] (N=375025 segments)
+Feature Name         | Expected   | Actual Corr  | Validation Match
+--------------------------------------------------------------------------------
+c1_1_mean_v          | +          |    +0.2919   | ⚠️ OK, Weak corr
+c1_2_var_v           | -          |    -0.2007   | ⚠️ OK, Weak corr
+c1_3_skew_v          | -          |    +0.1847   | ❌ Contradicts Theory
+c1_4_kurt_v          | -          |    -0.1548   | ⚠️ OK, Weak corr
+c1_5_mean_t          | -          |    -0.0277   | ⚠️ OK, Weak corr
+c1_6_delta_t         | -          |    -0.0849   | ⚠️ OK, Weak corr
+c1_7_dtdt            | -          |    +0.0003   | ❌ Contradicts Theory
+c1_8_mean_i          | +          |    -0.0359   | ❌ Contradicts Theory
+c1_9_var_i           | -          |    -0.0044   | ⚠️ OK, Weak corr
+c1_10_ent_v          | -          |    -0.1364   | ⚠️ OK, Weak corr
+c1_11_ent_t          | -          |    +0.0025   | ❌ Contradicts Theory
+c1_12_corr_vi        | +          |    +0.0010   | ⚠️ OK, Weak corr
+c1_13_corr_vt        | +          |    -0.0810   | ❌ Contradicts Theory
+c1_14_de_dq          | +          |    +0.2927   | ⚠️ OK, Weak corr
+c1_15_power_var      | -          |    -0.2007   | ⚠️ OK, Weak corr
+c2_dis_1             | +          |    -0.0024   | ❌ Contradicts Theory
+c2_dis_2             | +          |    -0.0000   | ❌ Contradicts Theory
+c2_dis_3             | -          |    +0.0034   | ❌ Contradicts Theory
+c2_dis_4             | -          |    -0.0000   | ⚠️ OK, Weak corr
+c2_dis_5             | +          |    -0.0061   | ❌ Contradicts Theory
+c2_dis_6             | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_7             | +          |    -0.0192   | ❌ Contradicts Theory
+c2_dis_8             | +          |    +0.0000   | ⚠️ OK, Weak corr
+c2_dis_9             | -          |    -0.0023   | ⚠️ OK, Weak corr
+c2_dis_10            | -          |    +0.0000   | ❌ Contradicts Theory
+c2_dis_11            | +          |    +0.1546   | ⚠️ OK, Weak corr
+c2_dis_12            | -          |    -0.0000   | ⚠️ OK, Weak corr
+c2_dis_13            | -          |    +0.1446   | ❌ Contradicts Theory
+c2_dis_14            | +          |       +nan   | ❌ Failed (NaN)
+c2_dis_15            | -          |    -0.0024   | ⚠️ OK, Weak corr
+c3_cha_1             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_2             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_3             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_4             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_5             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_6             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_7             | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_8             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_9             | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_10            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_11            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_12            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_13            | +          |       +nan   | ❌ Failed (NaN)
+c3_cha_14            | -          |       +nan   | ❌ Failed (NaN)
+c3_cha_15            | -          |       +nan   | ❌ Failed (NaN)
+
+==========================================================================================
+                               Overall Summary by Scenario                                
+==========================================================================================
+[Charge_High       ] Perfect Match Rate:   0.0% | (Perfect:0, Weak:17, Contradict:11, NaN:17)
+[Charge_Low        ] Perfect Match Rate:   0.0% | (Perfect:0, Weak:11, Contradict:18, NaN:16)
+[Charge_Mid        ] Perfect Match Rate:   0.0% | (Perfect:0, Weak:12, Contradict:18, NaN:15)
+[Discharge_High    ] Perfect Match Rate:   0.0% | (Perfect:0, Weak:14, Contradict:16, NaN:15)
+[Discharge_Low     ] Perfect Match Rate:   0.0% | (Perfect:0, Weak:15, Contradict:15, NaN:15)
+[Discharge_Mid     ] Perfect Match Rate:   0.0% | (Perfect:0, Weak:16, Contradict:13, NaN:16)
+==========================================================================================
+* Perfect Match: 수식 기반 예측 방향과 실제 상관관계 방향이 일치하며, |r| >= 0.3 으로 강한 연관성을 가짐.
+* Contradict: 수식 예측과 실제 방향이 정반대임. 수식 재점검 또는 시나리오 특화 예외 조항(Domain Knowledge) 확인 필요.

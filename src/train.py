@@ -80,43 +80,54 @@ def seed_everything(seed):
 # ==========================================
 class BatterySOHDataset(Dataset):
     def __init__(self, data_list, target_col="capacity", add_seq_dim=False):
-        # x: (N, 48) [45 HI + 3 Meta]
+        # x: (N, 45) [45 HI]
         x_raw = np.array([item["x"] for item in data_list])
         y_raw = np.array([item[target_col] for item in data_list])
 
-        # t: (N, 1) - PI 모듈의 편미분을 위한 시간(Cycle) 데이터 추출
-        t_raw = np.array([item.get("cyc", i) for i, item in enumerate(data_list)])
+        self.cell_ids = [item.get("cell", "unknown") for item in data_list]
 
         # mode: (N, 1) - 충전(1)/방전(0) 라벨
         m_raw = np.array([item.get("mode_label", 1) for item in data_list])
 
+        # scenario: (N, 1) - 시나리오를 정수 인덱스로 변환
+        scenario_map = {
+            "charge-high": 0,
+            "charge-mid": 1,
+            "charge-low": 2,
+            "discharge-high": 3,
+            "discharge-mid": 4,
+            "discharge-low": 5,
+        }
+
+        s_raw = []
+        for item in data_list:
+            scen_str = item.get("scenario", "")
+            if not scen_str:
+                mode_str = "charge" if item.get("mode_label", 1) == 1 else "discharge"
+                soc_val = item.get("soc_label", 0)
+                soc_str = "high" if soc_val == -2 else "mid" if soc_val == -1 else "low"
+                scen_str = f"{mode_str}-{soc_str}"
+            s_raw.append(scenario_map.get(scen_str, 0))
+
+        s_raw = np.array(s_raw)
+
         # NaN 체크 및 처리
         x_raw = np.nan_to_num(x_raw, nan=0.0)
         y_raw = np.nan_to_num(y_raw, nan=0.0)
-        t_raw = np.nan_to_num(t_raw, nan=0.0)
-
-        # t_raw 정규화 (z-scale 적용)
-        t_mean = t_raw.mean()
-        t_std = t_raw.std() if t_raw.std() > 0 else 1.0
-        t_norm = (t_raw - t_mean) / t_std
-
-        # [추가] t_min-max 정규화 (0~1 스케일)
-        # self.t_max = 2500.0
-        # t_norm = t_raw / self.t_max
 
         self.x = torch.tensor(x_raw, dtype=torch.float32)
-        self.t = torch.tensor(t_norm, dtype=torch.float32).unsqueeze(-1)
         self.m = torch.tensor(m_raw, dtype=torch.float32).unsqueeze(-1)
+        self.s = torch.tensor(s_raw, dtype=torch.long)
         self.y = torch.tensor(y_raw, dtype=torch.float32)
 
         if add_seq_dim:
-            self.x = self.x.unsqueeze(1)  # (N, 48) -> (N, 1, 48)
+            self.x = self.x.unsqueeze(1)  # (N, 45) -> (N, 1, 45)
 
     def __len__(self):
         return len(self.x)
 
     def __getitem__(self, idx):
-        return self.x[idx], self.t[idx], self.m[idx], self.y[idx]
+        return self.x[idx], self.m[idx], self.s[idx], self.y[idx], self.cell_ids[idx]
 
 
 def get_dataloaders(config):
@@ -124,7 +135,11 @@ def get_dataloaders(config):
     root_path = Path(config.processed_data_root)
     print(f"[Info] Searching for data in: {root_path}")
     for d_type in config.dataset_types:
-        data_path = root_path / f"{d_type}_optimized_tensors.pkl"
+        data_path = (
+            root_path
+            / f"case_{HYPERPARAMS['major_version']}"
+            / f"{d_type}_optimized_tensors.pkl"
+        )
         if not data_path.exists():
             print(f"[Warning] Data not found for {d_type} at {data_path}")
             continue
@@ -183,7 +198,7 @@ def get_dataloaders(config):
     val_loader = DataLoader(
         BatterySOHDataset(val_data, config.target_col, config.add_seq_dim),
         batch_size=config.batch_size,
-        shuffle=False,
+        shuffle=True,
     )
     test_loader = DataLoader(
         BatterySOHDataset(test_data, config.target_col, config.add_seq_dim),
@@ -235,13 +250,13 @@ def train_epoch(model, dataloader, criterion, optimizer, config):
     running_pde_loss = 0.0  # [추가] PDE Loss 누적
     processed_samples = 0
 
-    for i, (x, t, m, y) in enumerate(
+    for i, (x, m, s, y, cid) in enumerate(
         tqdm(dataloader, desc="  Training Batch", leave=False)
     ):
-        x, t, m, y = (
+        x, m, s, y = (
             x.to(config.device),
-            t.to(config.device),
             m.to(config.device),
+            s.to(config.device),
             y.to(config.device),
         )
 
@@ -250,11 +265,7 @@ def train_epoch(model, dataloader, criterion, optimizer, config):
             x = x.unsqueeze(1)
 
         # 입력값 유효성 체크
-        if not (
-            torch.isfinite(x).all()
-            and torch.isfinite(t).all()
-            and torch.isfinite(y).all()
-        ):
+        if not (torch.isfinite(x).all() and torch.isfinite(y).all()):
             print(f"\n[Error] Non-finite values detected in input batch {i}!")
             continue
 
@@ -264,14 +275,15 @@ def train_epoch(model, dataloader, criterion, optimizer, config):
         if config.use_pi:
             # CuDNN RNN의 Double Backward 미지원 에러 우회
             with torch.backends.cudnn.flags(enabled=False):
-                preds, pde_residual, u_t = model(x, t=t, mode=m, return_pde=True)
+                preds, pde_residual, u_hi = model(x, mode=m, return_pde=True)
             preds = preds.squeeze(-1)
 
             loss_data = criterion(preds, y)
             loss_pde = torch.mean(pde_residual**2)
 
-            # Monotonicity Loss: 시간에 따른 용량 변화율(u_t)이 양수(용량 증가)인 부분에 강력한 페널티 부여
-            loss_mono = torch.mean(torch.nn.functional.relu(u_t) ** 2)
+            # Monotonicity Loss: 선택한 타겟 피처(HI)에 대한 용량 변화율(u_hi)의 방향을 제약
+            # 물리적 지식에 따라, 해당 피처가 증가할 때 SOH가 감소해야 한다면 양수 기울기에 페널티 부여
+            loss_mono = torch.mean(torch.nn.functional.relu(u_hi) ** 2)
 
             # Adaptive Weighting: 학습 가능한 파라미터(log_var_*)를 사용하여 각 손실 함수의 스케일을 자동 조절
             # 참고: IEEE TIV 논문 식 (22)
@@ -350,11 +362,11 @@ def validate_epoch(model, dataloader, criterion, config):
     running_loss = 0.0
     processed_samples = 0
     with torch.no_grad():
-        for i, (x, t, m, y) in enumerate(dataloader):
-            x, t, m, y = (
+        for i, (x, m, s, y, cid) in enumerate(dataloader):
+            x, m, s, y = (
                 x.to(config.device),
-                t.to(config.device),
                 m.to(config.device),
+                s.to(config.device),
                 y.to(config.device),
             )
 
@@ -363,7 +375,7 @@ def validate_epoch(model, dataloader, criterion, config):
                 x = x.unsqueeze(1)
 
             if config.use_pi:
-                preds = model(x, t=t, mode=m, return_pde=False).squeeze(-1)
+                preds = model(x, mode=m, return_pde=False).squeeze(-1)
             else:
                 if isinstance(model, PhysicsInformedWrapper):
                     preds = model(x, mode=m).squeeze(-1)
@@ -562,6 +574,7 @@ if __name__ == "__main__":
             model_name_upper,
             use_pi=cfg.use_pi if is_dl else False,
             feature_dim=cfg.input_dim,
+            pi_target_idx=getattr(cfg, "pi_target_idx", 0),
             output_dim=cfg.output_dim,
             **specific_params,
         )

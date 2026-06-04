@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 import numpy as np
+from src.hyperparams import HYPERPARAMS
 
 
 def load_scenario_data(output_root, dataset_type, scenario_name):
@@ -102,17 +103,21 @@ def plot_pareto_distribution(df, scenario_name, features_to_plot, save_dir=None)
 
 
 def main():
+    # 첫 실행 : IS_REMOVAL=False로 설정, 시나리오별로 'count' 피처의 상/하위 5% 이상치 인덱스를 식별하여 removal_index.csv에 저장
+    # 이후 실행 : IS_REMOVAL=True로 설정하여 removal_index.csv에 기록된 사이클을 제거한 후 트렌드/파레토 플랏 생성
     # --- 설정 영역 ---
-    DATASET_TYPE = "mit"  # "hust" 또는 "mit"
+    DATASET_TYPE = "hust"  # "hust" 또는 "mit"
     IS_REMOVAL = True  # True일 경우 removal_index.csv에 해당하는 데이터를 제거 후 플랏
 
     SUMMARY_ROOT = Path(
-        "D:/chanminLee/data_store/LFP_SOH_estimation/case_5/scenario_summaries"
+        f"D:/chanminLee/data_store/LFP_SOH_estimation/case_{HYPERPARAMS['major_version']}/scenario_summaries"
     )
-    FIGURE_DIR = Path("./outputs/figures/scenario_analysis")
+    FIGURE_DIR = Path(f"./outputs/figures/scenario_analysis/{DATASET_TYPE}")
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
 
-    REMOVAL_INDEX_PATH = Path("removal_index.csv")
+    REMOVAL_INDEX_PATH = Path(
+        f"case{HYPERPARAMS['major_version']}_{DATASET_TYPE}_removal_index.csv"
+    )
 
     # 시나리오 리스트
     scenarios = [

@@ -101,14 +101,15 @@ class PhysicsInformedWrapper(nn.Module):
     물리 정보 기반 신경망(Dynamics Network) 연산을 추가하는 래퍼 클래스입니다.
     """
 
-    def __init__(self, base_model, feature_dim=40):
+    def __init__(self, base_model, feature_dim=40, pi_target_idx=0):
         super(PhysicsInformedWrapper, self).__init__()
-        self.solution_net = base_model  # F(t, x)
+        self.solution_net = base_model  # F(x)
         self.feature_dim = feature_dim
+        self.pi_target_idx = pi_target_idx
 
-        # Dynamics Network G(t, x, u, u_t, u_x)
-        # 입력 차원 계산: t(1) + x(feature_dim) + u(1) + u_t(1) + u_x(feature_dim)
-        g_input_dim = 1 + feature_dim + 1 + 1 + feature_dim
+        # Dynamics Network G(x, u, u_hi, u_x)
+        # 입력 차원 계산: x(feature_dim) + u(1) + u_hi(1) + u_x(feature_dim)
+        g_input_dim = feature_dim + 1 + 1 + feature_dim
         self.dynamics_net = nn.Sequential(
             nn.Linear(g_input_dim, 64),
             nn.Tanh(),
@@ -123,7 +124,7 @@ class PhysicsInformedWrapper(nn.Module):
         self.log_var_pde = nn.Parameter(torch.zeros(1))
         self.log_var_mono = nn.Parameter(torch.zeros(1))
 
-    def forward(self, x, t=None, mode=None, return_pde=False):
+    def forward(self, x, mode=None, return_pde=False):
         """
         x: (B, D) or (B, L, D)
         mode: (B, 1) - 1: Charge, 0: Discharge
@@ -150,29 +151,15 @@ class PhysicsInformedWrapper(nn.Module):
             x = x * mask
 
         if return_pde:
-            assert (
-                t is not None
-            ), "PDE 계산을 위해서는 시간(Cycle) 정보 't'가 명시적으로 필요합니다."
             x.requires_grad_(True)
-            t.requires_grad_(True)
-
-        # u = F(x, t)가 되도록 x와 t를 결합
-        if t is not None:
-            if len(x.shape) == 3:  # (B, L, D) - LSTM, iTransformer
-                t_expanded = t.unsqueeze(1).expand(-1, x.size(1), -1)
-                xt = torch.cat([x, t_expanded], dim=-1)
-            else:  # (B, D) - MLP
-                xt = torch.cat([x, t], dim=-1)
-        else:
-            xt = x
 
         if not return_pde:
-            return self.solution_net(xt)
+            return self.solution_net(x)
 
-        # 1. Solution Network 예측: u = F(xt)
-        u = self.solution_net(xt)
+        # 1. Solution Network 예측: u = F(x)
+        u = self.solution_net(x)
 
-        # 2. 편미분 계산 (u_x, u_t)
+        # 2. 편미분 계산 (u_x) - t가 없으므로 x 전체에 대해 편미분
         u_x = torch.autograd.grad(
             outputs=u,
             inputs=x,
@@ -181,27 +168,26 @@ class PhysicsInformedWrapper(nn.Module):
             retain_graph=True,
         )[0]
 
-        u_t = torch.autograd.grad(
-            outputs=u,
-            inputs=t,
-            grad_outputs=torch.ones_like(u),
-            create_graph=True,
-            retain_graph=True,
-        )[0]
-
         # 3. 형태 맞추기 (Flatten)
         x_flat = x.view(x.size(0), -1)  # (B, feature_dim)
         u_x_flat = u_x.view(u_x.size(0), -1)  # (B, feature_dim)
+        
+        # 4. 타겟 지표(HI)에 대한 편미분 추출 (이전의 u_t 역할을 대신함)
+        # 시퀀스 모델인 경우 마지막 시점의 특징을 기준으로 삼거나, 2D 구조인 경우 바로 인덱싱
+        if len(u_x.shape) == 3:
+             u_hi = u_x[:, -1, self.pi_target_idx].unsqueeze(-1) # (B, 1)
+        else:
+             u_hi = u_x[:, self.pi_target_idx].unsqueeze(-1) # (B, 1)
 
-        # 4. Dynamics Network 입력 생성 및 추론
-        # 입력 차원: t(1) + x(D) + u(1) + u_t(1) + u_x(D)
-        g_input = torch.cat([t, x_flat, u, u_t, u_x_flat], dim=1)  # (B, g_input_dim)
+        # 5. Dynamics Network 입력 생성 및 추론
+        # 입력 차원: x(D) + u(1) + u_hi(1) + u_x(D)
+        g_input = torch.cat([x_flat, u, u_hi, u_x_flat], dim=1)  # (B, g_input_dim)
         g_out = self.dynamics_net(g_input)
 
-        # 5. PDE Residual 계산: H = u_t - G(t, x, u, u_t, u_x)
-        pde_residual = u_t - g_out
+        # 6. PDE Residual 계산: H = u_hi - G(x, u, u_hi, u_x)
+        pde_residual = u_hi - g_out
 
-        return u, pde_residual, u_t
+        return u, pde_residual, u_hi
 
 
 # ==========================================
@@ -249,11 +235,11 @@ def get_lightgbm_model(**kwargs):
 # ==========================================
 
 
-def get_model(model_name, use_pi=False, feature_dim=40, **kwargs):
+def get_model(model_name, use_pi=False, feature_dim=40, pi_target_idx=0, **kwargs):
     model_name = model_name.upper()
 
-    # [수정] PI 모드일 경우 시간(t)이 추가되므로 입력 차원을 1 늘림
-    actual_input_dim = feature_dim + 1 if use_pi else feature_dim
+    # [수정] Cycle-Agnostic PINN이므로 시간(t)가 없어 입력 차원은 항상 feature_dim과 동일
+    actual_input_dim = feature_dim
 
     # --- Deep Learning Models ---
     if model_name in ["ITRANSFORMER", "TABNET", "MLP"]:
@@ -266,7 +252,7 @@ def get_model(model_name, use_pi=False, feature_dim=40, **kwargs):
 
         # PI 옵션 활성화 시 Wrapper로 감싸서 반환
         if use_pi:
-            return PhysicsInformedWrapper(base_model, feature_dim=feature_dim)
+            return PhysicsInformedWrapper(base_model, feature_dim=feature_dim, pi_target_idx=pi_target_idx)
         else:
             return base_model
 
