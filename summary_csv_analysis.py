@@ -64,6 +64,7 @@ def plot_feature_trends(
         save_path = Path(save_dir) / f"{scenario_name}_trends.png"
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
         print(f"Saved plot to {save_path}")
+        plt.close()
 
 
 def plot_pareto_distribution(df, scenario_name, features_to_plot, save_dir=None):
@@ -112,7 +113,9 @@ def main():
     SUMMARY_ROOT = Path(
         f"D:/chanminLee/data_store/LFP_SOH_estimation/case_{HYPERPARAMS['major_version']}/scenario_summaries"
     )
-    FIGURE_DIR = Path(f"./outputs/figures/scenario_analysis/{DATASET_TYPE}")
+    FIGURE_DIR = Path(
+        f"./outputs/figures/scenario_analysis/case_{HYPERPARAMS['major_version']}/{DATASET_TYPE}"
+    )
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
 
     REMOVAL_INDEX_PATH = Path(
@@ -141,22 +144,43 @@ def main():
 
         if df is not None:
             # 1. 'count' 피처 기반 상/하위 1.5% 이상치 식별
-            counts = df["count"].dropna().sort_values()
-            n = len(counts)
-            if n > 0:
-                lower_bound = np.percentile(counts, 5)
-                upper_bound = np.percentile(counts, 95)
+            # counts = df["count"].dropna().sort_values()
 
-                outliers = df[
-                    (df["count"] < lower_bound) | (df["count"] > upper_bound)
-                ].copy()
-                outliers["scenario"] = scenario
-                all_removal_indices.append(
-                    outliers[["cell_id", "cycle", "scenario", "count"]]
-                )
-                print(
-                    f"  Identified {len(outliers)} count outliers (Limits: {lower_bound:.1f} ~ {upper_bound:.1f})"
-                )
+            # n = len(counts)
+            # if n > 0:
+            #     lower_bound = np.percentile(counts, 5)
+            #     upper_bound = np.percentile(counts, 95)
+
+            #     outliers = df[
+            #         (df["count"] < lower_bound) | (df["count"] > upper_bound)
+            #     ].copy()
+            #     outliers["scenario"] = scenario
+            #     all_removal_indices.append(
+            #         outliers[["cell_id", "cycle", "scenario", "count"]]
+            #     )
+            #     print(
+            #         f"  Identified {len(outliers)} count outliers (Limits: {lower_bound:.1f} ~ {upper_bound:.1f})"
+            #     )
+
+            # 수정1. 모든 피처 대상으로 이상치 탐지 (count뿐 아니라 V_std, I_std 등도 포함)
+            for feat in target_features:
+                feature_values = df[feat].dropna().sort_values()
+                n = len(feature_values)
+                if n > 0:
+                    lower_bound = np.percentile(feature_values, 0.1)
+                    upper_bound = np.percentile(feature_values, 99.9)
+
+                    outliers = df[
+                        (df[feat] < lower_bound) | (df[feat] > upper_bound)
+                    ].copy()
+                    outliers["scenario"] = scenario
+                    outliers["feature"] = feat
+                    all_removal_indices.append(
+                        outliers[["cell_id", "cycle", "scenario", "feature", feat]]
+                    )
+                    print(
+                        f"  Identified {len(outliers)} outliers in {feat} (Limits: {lower_bound:.2f} ~ {upper_bound:.2f})"
+                    )
 
             # 2. 이상치 제거 수행 (옵션)
             if IS_REMOVAL and REMOVAL_INDEX_PATH.exists():

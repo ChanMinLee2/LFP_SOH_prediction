@@ -46,41 +46,41 @@ def evaluate_model(model, test_loader, config, is_dl=True):
         model.eval()
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(test_loader, desc="Inference")):
-                # x, t, m, y 반환 (BatterySOHDataset 참조)
+                # x, m, s, y, cell_id 반환 (src/train.py BatterySOHDataset 참조)
                 x = batch[0].to(config.device)
-                t = batch[1].to(config.device)
-                m = batch[2].to(config.device)
+                m = batch[1].to(config.device)
+                s = batch[2].to(config.device)
                 y = batch[3].to(config.device)
+                cids = batch[4]
 
                 if getattr(config, "add_seq_dim", False) and len(x.shape) == 2:
                     x = x.unsqueeze(1)
 
-                meta_cell = np.ones(y.size(0)) * batch_idx
-                meta_scen = ["default"] * y.size(0)
-
                 start_t = time.perf_counter()
 
-                if config.use_pi:
-                    preds = model(x, t=t, mode=m, return_pde=False).squeeze(-1)
+                # PhysicsInformedWrapper 또는 일반 모델 호출 (t 인자 제거)
+                if isinstance(model, PhysicsInformedWrapper):
+                    preds = model(x, mode=m, return_pde=False).squeeze(-1)
                 else:
-                    if isinstance(model, PhysicsInformedWrapper):
-                        preds = model(x, mode=m).squeeze(-1)
-                    else:
-                        preds = model(x).squeeze(-1)
+                    preds = model(x).squeeze(-1)
 
                 batch_time = time.perf_counter() - start_t
                 total_inference_time += batch_time
 
                 results["targets"].extend(y.cpu().numpy())
                 results["preds"].extend(preds.cpu().numpy())
-                results["time"].extend(t.cpu().numpy().flatten())
-                results["cell_id"].extend(meta_cell)
-                results["scenario"].extend(meta_scen)
+                
+                # time 정보가 데이터셋에 없으므로, 추론 순서대로 인덱스 부여 (Trend Consistency용)
+                current_count = len(results["time"])
+                results["time"].extend(np.arange(current_count, current_count + y.size(0)))
+                results["cell_id"].extend(cids)
+                results["scenario"].extend(s.cpu().numpy().flatten())
     else:
-        # ML 모델 추론
+        # ML 모델 추론 (BatterySOHDataset 속성 사용)
         X_test = test_loader.dataset.x.numpy()
         y_test = test_loader.dataset.y.numpy()
-        t_test = test_loader.dataset.t.numpy()
+        s_test = test_loader.dataset.s.numpy()
+        c_test = test_loader.dataset.cell_ids
 
         if len(X_test.shape) == 3:
             X_test = X_test.reshape(X_test.shape[0], -1)
@@ -91,9 +91,9 @@ def evaluate_model(model, test_loader, config, is_dl=True):
 
         results["targets"].extend(y_test)
         results["preds"].extend(preds)
-        results["time"].extend(t_test.flatten())
-        results["cell_id"].extend(np.ones(len(y_test)))
-        results["scenario"].extend(["default"] * len(y_test))
+        results["time"].extend(np.arange(len(y_test))) # 임시 타임라인
+        results["cell_id"].extend(c_test)
+        results["scenario"].extend(s_test)
 
     avg_inference_time_ms = (total_inference_time / len(test_loader.dataset)) * 1000
     return pd.DataFrame(results), avg_inference_time_ms
@@ -148,25 +148,18 @@ def calculate_and_plot_metrics(df_results, model, config, avg_inf_time_ms, is_dl
                 if getattr(config, "add_seq_dim", False):
                     dummy_x = dummy_x.unsqueeze(1)
 
-                if config.use_pi:
+                if config.use_pi or isinstance(model, PhysicsInformedWrapper):
                     macs, _ = profile(
                         model,
                         inputs=(
                             dummy_x,
-                            torch.randn(1, 1).to(config.device),
-                            torch.randn(1, 1).to(config.device),
+                            torch.randn(1, 1).to(config.device),  # mode
+                            False,  # return_pde (Boolean)
                         ),
                         verbose=False,
                     )
                 else:
-                    if isinstance(model, PhysicsInformedWrapper):
-                        macs, _ = profile(
-                            model,
-                            inputs=(dummy_x, None, torch.randn(1, 1).to(config.device)),
-                            verbose=False,
-                        )
-                    else:
-                        macs, _ = profile(model, inputs=(dummy_x,), verbose=False)
+                    macs, _ = profile(model, inputs=(dummy_x,), verbose=False)
                 metrics["11. FLOPs"] = macs * 2
             except:
                 metrics["11. FLOPs"] = "Profiler Error"

@@ -18,3 +18,8 @@ MIT_data
 
 ref/*.pdf
 outputs/figures/*
+src/data/mit_all_segments_45_features.csv
+src/data/hust_all_segments_45_features.csv
+
+outputs/outlier_analysis/HUST_cycle_statistics.csv
+outputs/outlier_analysis/MIT_cycle_statistics.csv

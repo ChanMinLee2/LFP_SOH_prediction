@@ -19,3 +19,8 @@ mit, cycle_step = 1 적용
 # case 8 
 mit + 2.5% outlier removal 적용, cycle_step=1, 다른건 동일
 
+# case 9
+전처리에서 이상치 제거 미진행한 경우, cycle_step=1 
+
+# case 10 (모델이 더이상 cycle_number (t)를 알지 못함)
+전처리에서 이상치 제거 진행, 전처리 0.1~1 phase 구조변경, cycle_step=1, 이상치 비율 0.1

@@ -24,8 +24,6 @@ def convert_mit_to_csv(mit_dir, output_dir):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    import pdb
-
     batch_files = [sorted(mit_dir.glob("batch*.pkl"))[0]]
     # batch_files = sorted(mit_dir.glob(["batch1.pkl"]))
     print(batch_files)
@@ -122,9 +120,9 @@ if __name__ == "__main__":
 
     # Run Conversions
     print("--- Starting MIT Conversion ---")
-    convert_mit_to_csv(MIT_INPUT, MIT_INPUT)
+    # convert_mit_to_csv(MIT_INPUT, MIT_INPUT)
 
     print("\n--- Starting HUST Conversion ---")
-    # convert_hust_to_csv(HUST_INPUT, HUST_INPUT)
+    convert_hust_to_csv(HUST_INPUT, HUST_INPUT)
 
     print("\nConversion Complete.")
